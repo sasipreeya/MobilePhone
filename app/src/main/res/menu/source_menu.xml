@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      android:icon="@drawable/ic_menu_black_24dp"
+      app:showAsAction="always"
+      android:title="Source By">
+    <!-- menu group -->
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/priceLH"
+              android:title="Price low to high"/>
+        <item android:id="@+id/priceHL"
+              android:title="Price high to low"/>
+        <item android:id="@+id/ratingHL"
+              android:title="Raing 5-1"/>
+    </group>
+</menu>
