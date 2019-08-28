@@ -1,12 +1,11 @@
 package com.scb.mobilephone.ui.main
 
-import android.content.Context
-import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.scb.mobilephone.FavoriteFragment
 import com.scb.mobilephone.ListFragment
+import com.scb.mobilephone.MainActivity
 import com.scb.mobilephone.R
 
 private val TAB_TITLES = arrayOf(
@@ -18,7 +17,7 @@ private val TAB_TITLES = arrayOf(
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class SectionsPagerAdapter(private val context: MainActivity, fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     lateinit var mListFragment: ListFragment
 

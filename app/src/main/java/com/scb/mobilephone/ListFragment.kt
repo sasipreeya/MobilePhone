@@ -5,13 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.os.Parcelable
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.widget.Button
-import android.widget.ImageButton
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.ToggleButton
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,22 +20,17 @@ import com.bumptech.glide.request.RequestOptions
 import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.network.ApiInterface
 import kotlinx.android.synthetic.main.fragment_list.view.*
-import kotlinx.android.synthetic.main.phone_list.*
 import kotlinx.android.synthetic.main.phone_list.view.*
-import kotlinx.android.synthetic.main.phone_list.view.favoriteBtn
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import androidx.core.content.ContextCompat.startActivity
-import android.R.id.message
-import android.view.*
 
 
 class ListFragment : Fragment() {
 
     private var mDataArray: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
+    private var mDataArraySorted: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
     private lateinit var mAdapter: ListFragment.CustomAdapter
-    var favClick: Int = 0
 
     private var favoriteItem: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
 
@@ -51,16 +47,16 @@ class ListFragment : Fragment() {
             it.layoutManager = LinearLayoutManager(activity)
         }
 
-        feedData()
+        feedData("data")
 
         _view.swipeRefresh.setOnRefreshListener {
-            feedData()
+            feedData("data")
         }
 
         return _view
     }
 
-    fun feedData() {
+    fun feedData(sort: String) {
 
         val _call = ApiInterface.getClient().getPhones()
         // check url api
@@ -78,6 +74,24 @@ class ListFragment : Fragment() {
                 if (response.isSuccessful) {
                     mDataArray.clear()
                     mDataArray.addAll((response.body()!!))
+                    when (sort) {
+                        "Price low to high" -> {
+                            mDataArraySorted.clear()
+                            mDataArraySorted.addAll(mDataArray.sortedBy { it.price })
+                            Log.d("scb_network", mDataArraySorted.toString())
+                        }
+                        "Price high to low" -> {
+                            mDataArraySorted.clear()
+                            mDataArraySorted.addAll(mDataArray.sortedByDescending { it.price })
+                            Log.d("scb_network", mDataArraySorted.toString())
+                        }
+                        "Rating 5-1" -> {
+                            mDataArraySorted.clear()
+                            mDataArraySorted.addAll(mDataArray.sortedByDescending{ it.rating })
+                            Log.d("scb_network", mDataArraySorted.toString())
+                        }
+                        else -> mDataArraySorted.addAll(mDataArray)
+                    }
                     mAdapter.notifyDataSetChanged()
 
                     Handler().postDelayed({
@@ -107,7 +121,7 @@ class ListFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
-            val item = mDataArray[position]
+            val item = mDataArraySorted[position]
             holder.phoneName.text = item.name
             holder.phoneDetail.text = item.description
             holder.phonePrice.text = "Price : $" + item.price
@@ -126,17 +140,16 @@ class ListFragment : Fragment() {
                 startActivity(intent)
             }
 
-            holder.favBtn?.setOnClickListener {
-                holder.favBtn.setImageResource(R.drawable.heart)
-                favoriteItem.add(mDataArray[position])
-                favClick = 1
-            }
-
-            if (favClick == 1) {
-                holder.favBtn?.setOnClickListener {
-                    holder.favBtn.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+            holder.favBtn.setText(null)
+            holder.favBtn.setTextOn(null)
+            holder.favBtn.setTextOff(null)
+            holder.favBtn.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    favoriteItem.add(item)
+                    Log.d("favItem", favoriteItem.toString())
+                } else {
                     favoriteItem.remove(item)
-                    favClick = 0
+                    Log.d("favItem", favoriteItem.toString())
                 }
             }
         }
@@ -150,7 +163,7 @@ class ListFragment : Fragment() {
         val phoneDetail: TextView = view.phoneDetail
         val phonePrice: TextView = view.phonePrice
         val phoneRating: TextView = view.phoneRating
-        val favBtn: ImageButton? = view.favoriteBtn
+        val favBtn: ToggleButton = view.favoriteBtn
     }
 
 

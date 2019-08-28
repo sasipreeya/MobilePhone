@@ -1,26 +1,14 @@
 package com.scb.mobilephone
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.content.Intent
-import android.os.Handler
 import android.util.Log
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.PagerAdapter
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.scb.mobilephone.models.PhoneBean
+import androidx.appcompat.app.AppCompatActivity
+import com.ouattararomuald.slider.ImageSlider
+import com.ouattararomuald.slider.SliderAdapter
+import com.ouattararomuald.slider.loaders.picasso.PicassoImageLoaderFactory
 import com.scb.mobilephone.models.PhotoBean
 import com.scb.mobilephone.network.ApiInterface
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.fragment_list.view.*
-import kotlinx.android.synthetic.main.phone_list.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,18 +19,22 @@ class DetailActivity : AppCompatActivity() {
     private var mDataArray: ArrayList<PhotoBean> = ArrayList<PhotoBean>()
     lateinit var photoDetailURL: String
 
+    private lateinit var imageSlider: ImageSlider
+    private var imageUrls = arrayListOf(
+        "http://i.imgur.com/CqmBjo5.jpg",
+        "http://i.imgur.com/zkaAooq.jpg",
+        "http://i.imgur.com/0gqnEaY.jpg"
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
+        feedData()
+
         phoneName.setText(intent.getStringExtra("name"))
         phoneBrand.setText(intent.getStringExtra("brand"))
         phoneDetail.setText(intent.getStringExtra("detail"))
-
-        Glide.with(this).load(intent.getStringExtra("image")).apply(RequestOptions.centerCropTransform())
-            .into(phoneImage)
-
-        feedData()
     }
 
 
@@ -63,7 +55,22 @@ class DetailActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     mDataArray.clear()
                     mDataArray.addAll((response.body()!!))
+                    imageUrls.clear()
+                    for (i in 0 until mDataArray.size) {
+                        if (mDataArray[i].url.contains("http", true)) {
+                            imageUrls.add(mDataArray[i].url)
+                        } else {
+                            imageUrls.add("https://" + mDataArray[i].url)
+                        }
+                    }
+                    Log.d("scb_network", imageUrls.toString())
 
+                    imageSlider = findViewById(R.id.phoneImage)
+                    imageSlider.adapter = SliderAdapter(
+                        applicationContext,
+                        PicassoImageLoaderFactory(),
+                        imageUrls = imageUrls
+                    )
                 }
             }
 

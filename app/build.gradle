@@ -42,4 +42,8 @@ dependencies {
 
     // Image loading framework
     implementation "com.github.bumptech.glide:glide:4.9.0"
+    implementation 'com.ouattararomuald:slider-glide:2.0.0'
+
+    implementation 'com.ouattararomuald:slider-picasso:2.0.0'
+    implementation 'com.ouattararomuald:slider:2.0.0'
 }

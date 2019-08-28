@@ -8,7 +8,7 @@
         tools:context=".DetailActivity"
         android:orientation="vertical">
 
-    <ImageView
+    <com.ouattararomuald.slider.ImageSlider
             android:id="@+id/phoneImage"
             android:src="@mipmap/ic_launcher"
             android:layout_margin="8dp"
