@@ -32,9 +32,11 @@ class DetailActivity : AppCompatActivity() {
 
         feedData()
 
-        phoneName.setText(intent.getStringExtra("name"))
-        phoneBrand.setText(intent.getStringExtra("brand"))
-        phoneDetail.setText(intent.getStringExtra("detail"))
+        phoneName.text = intent.getStringExtra("name")
+        phoneBrand.text = intent.getStringExtra("brand")
+        phoneDetail.text = intent.getStringExtra("detail")
+        phonePrice.text = "Price : " + intent.getDoubleExtra("price", 0.0).toString()
+        phoneRating.text = "Rating : " + intent.getDoubleExtra("rating", 0.0).toString()
     }
 
 

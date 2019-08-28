@@ -8,13 +8,37 @@
         tools:context=".DetailActivity"
         android:orientation="vertical">
 
-    <com.ouattararomuald.slider.ImageSlider
-            android:id="@+id/phoneImage"
-            android:src="@mipmap/ic_launcher"
+    <RelativeLayout
             android:layout_gravity="center"
-            android:layout_margin="8dp"
+            android:gravity="center"
             android:layout_width="200dp"
-            android:layout_height="300dp"/>
+            android:layout_height="300dp">
+
+        <com.ouattararomuald.slider.ImageSlider
+                android:id="@+id/phoneImage"
+                android:src="@mipmap/ic_launcher"
+                android:layout_centerInParent="true"
+                android:layout_margin="8dp"
+                android:layout_width="200dp"
+                android:layout_height="300dp"/>
+
+        <TextView
+                android:id="@+id/phoneRating"
+                android:text="Rating 4.9"
+                android:textSize="16dp"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/phonePrice"
+                android:text="Price 123"
+                android:textSize="16dp"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
 
     <LinearLayout
             android:orientation="horizontal"

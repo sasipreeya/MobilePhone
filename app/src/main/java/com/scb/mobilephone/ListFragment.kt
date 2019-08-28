@@ -94,7 +94,10 @@ class ListFragment : Fragment() {
                             mDataArraySorted.addAll(mDataArray.sortedByDescending{ it.rating })
                             Log.d("scb_network", mDataArraySorted.toString())
                         }
-                        else -> mDataArraySorted.addAll(mDataArray)
+                        else -> {
+                            mDataArraySorted.clear()
+                            mDataArraySorted.addAll(mDataArray)
+                        }
                     }
                     mAdapter.notifyDataSetChanged()
 
@@ -141,6 +144,8 @@ class ListFragment : Fragment() {
                 intent.putExtra("brand", item.brand)
                 intent.putExtra("detail", item.description)
                 intent.putExtra("id", item.id)
+                intent.putExtra("rating", item.rating)
+                intent.putExtra("price", item.price)
                 startActivity(intent)
             }
 

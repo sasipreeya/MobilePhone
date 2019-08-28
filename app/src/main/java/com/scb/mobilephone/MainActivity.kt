@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
             mBuilder.setSingleChoiceItems(listItems, -1) { dialogInterface, i ->
                 val selectedItem = listItems[i]
                 sectionsPagerAdapter.mListFragment.feedData(selectedItem)
+                sectionsPagerAdapter.mFavoriteFragment.feedFavData(selectedItem)
                 dialogInterface.dismiss()
             }
 

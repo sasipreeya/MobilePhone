@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.phone_list.view.phoneName
 class FavoriteFragment : Fragment() {
 
     private var favoriteItem: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
+    private var favoriteItemSorted: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
     lateinit var mAdapter: FavoriteFragment.CustomAdapter
 
     override fun onCreateView(
@@ -45,13 +46,51 @@ class FavoriteFragment : Fragment() {
             it.layoutManager = LinearLayoutManager(activity)
         }
 
-        feedFavData()
+        feedFavData("data")
 
         _view.swipeRefresh.setOnRefreshListener {
-            feedFavData()
+            feedFavData("data")
         }
 
         return _view
+    }
+
+    fun feedFavData(sort: String) {
+
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+            object : BroadcastReceiver(){
+                override fun onReceive(context: Context, intent: Intent) {
+                    favoriteItem.clear()
+                    favoriteItem.addAll(intent.getParcelableArrayListExtra("RECEIVED_MESSAGE"))
+                    Log.d("favPage", favoriteItem.toString())
+                    when (sort) {
+                        "Price low to high" -> {
+                            favoriteItemSorted.clear()
+                            favoriteItemSorted.addAll(favoriteItem.sortedBy { it.price })
+                        }
+                        "Price high to low" -> {
+                            favoriteItemSorted.clear()
+                            favoriteItemSorted.addAll(favoriteItem.sortedByDescending { it.price })
+                        }
+                        "Rating 5-1" -> {
+                            favoriteItemSorted.clear()
+                            favoriteItemSorted.addAll(favoriteItem.sortedByDescending{ it.rating })
+                        }
+                        else -> {
+                            favoriteItemSorted.clear()
+                            favoriteItemSorted.addAll(favoriteItem)
+                        }
+                    }
+                    mAdapter.notifyDataSetChanged()
+
+                    Handler().postDelayed({
+                        view?.swipeRefresh?.isRefreshing = false
+                    }, 3000)
+                }
+            },
+            IntentFilter("RECEIVED_NEW_MESSAGE")
+        )
+
     }
 
 
@@ -67,11 +106,11 @@ class FavoriteFragment : Fragment() {
         }
 
         override fun getItemCount(): Int {
-            return favoriteItem.count()
+            return favoriteItemSorted.count()
         }
 
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
-            val item = favoriteItem[position]
+            val item = favoriteItemSorted[position]
             holder.phoneName.text = item.name
             holder.phonePrice.text = item.price.toString()
             holder.phoneRating.text = "Rating : " + item.rating
@@ -86,27 +125,6 @@ class FavoriteFragment : Fragment() {
         val phoneName: TextView = view.phoneNameFav
         val phonePrice: TextView = view.phonePriceFav
         val phoneRating: TextView = view.phoneRatingFav
-    }
-
-    private fun feedFavData() {
-
-        LocalBroadcastManager.getInstance(context!!).registerReceiver(
-            object : BroadcastReceiver(){
-                override fun onReceive(context: Context, intent: Intent) {
-                    favoriteItem.clear()
-                    favoriteItem.addAll(intent.getParcelableArrayListExtra("RECEIVED_MESSAGE"))
-                    Log.d("favPage", favoriteItem.toString())
-                }
-            },
-            IntentFilter("RECEIVED_NEW_MESSAGE")
-        )
-
-        mAdapter.notifyDataSetChanged()
-
-        Handler().postDelayed({
-            view?.swipeRefresh?.isRefreshing = false
-        }, 3000)
-
     }
 
 }
