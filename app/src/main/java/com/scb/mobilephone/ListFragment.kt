@@ -134,8 +134,7 @@ class ListFragment : Fragment() {
             holder.phonePrice.text = "Price : $" + item.price
             holder.phoneRating.text = "Rating : " + item.rating
 
-            Glide.with(context).load(item.thumbImageURL).apply(RequestOptions.circleCropTransform())
-                    .into(holder.phoneImage)
+            Glide.with(context).load(item.thumbImageURL).into(holder.phoneImage)
 
             holder.cardview.setOnClickListener {
                 val intent = Intent(activity, DetailActivity::class.java)

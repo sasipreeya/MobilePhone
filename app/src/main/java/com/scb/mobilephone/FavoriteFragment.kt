@@ -115,8 +115,7 @@ class FavoriteFragment : Fragment() {
             holder.phonePrice.text = item.price.toString()
             holder.phoneRating.text = "Rating : " + item.rating
 
-            Glide.with(context).load(item.thumbImageURL).apply(RequestOptions.circleCropTransform())
-                    .into(holder.phoneImage)
+            Glide.with(context).load(item.thumbImageURL).into(holder.phoneImage)
         }
     }
 
