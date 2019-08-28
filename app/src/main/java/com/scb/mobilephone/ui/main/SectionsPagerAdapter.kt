@@ -20,6 +20,7 @@ private val TAB_TITLES = arrayOf(
 class SectionsPagerAdapter(private val context: MainActivity, fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     lateinit var mListFragment: ListFragment
+    lateinit var mFavoriteFragment: FavoriteFragment
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
@@ -29,7 +30,8 @@ class SectionsPagerAdapter(private val context: MainActivity, fm: FragmentManage
                 mListFragment
             }
             else -> {
-                FavoriteFragment()
+                mFavoriteFragment = FavoriteFragment()
+                mFavoriteFragment
             }
         }
     }

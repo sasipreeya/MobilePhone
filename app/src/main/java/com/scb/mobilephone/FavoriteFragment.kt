@@ -3,13 +3,12 @@ package com.scb.mobilephone
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,7 +19,7 @@ import kotlinx.android.synthetic.main.phone_list.view.*
 
 class FavoriteFragment : Fragment() {
 
-    private var favoriteItem: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
+    private var favoriteItem: ArrayList<PhoneBean> = ArrayList()
     lateinit var mAdapter: FavoriteFragment.CustomAdapter
 
     override fun onCreateView(
@@ -58,7 +57,7 @@ class FavoriteFragment : Fragment() {
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
             val item = favoriteItem[position]
             holder.phoneName.text = item.name
-            holder.phonePrice.text = "Price : $" + item.price
+            holder.phonePrice.text = item.price.toString()
             holder.phoneRating.text = "Rating : " + item.rating
 
             Glide.with(context).load(item.thumbImageURL).apply(RequestOptions.circleCropTransform())

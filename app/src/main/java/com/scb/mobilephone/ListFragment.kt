@@ -24,6 +24,9 @@ import kotlinx.android.synthetic.main.phone_list.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.os.Parcel
+import android.os.Parcelable
+import androidx.cardview.widget.CardView
 
 
 class ListFragment : Fragment() {
@@ -32,7 +35,7 @@ class ListFragment : Fragment() {
     private var mDataArraySorted: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
     private lateinit var mAdapter: ListFragment.CustomAdapter
 
-    private var favoriteItem: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
+    private var favoriteItem: ArrayList<String> = ArrayList()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -130,7 +133,7 @@ class ListFragment : Fragment() {
             Glide.with(context).load(item.thumbImageURL).apply(RequestOptions.circleCropTransform())
                     .into(holder.phoneImage)
 
-            holder.phoneImage.setOnClickListener {
+            holder.cardview.setOnClickListener {
                 val intent = Intent(activity, DetailActivity::class.java)
                 intent.putExtra("image", item.thumbImageURL)
                 intent.putExtra("name", item.name)
@@ -143,12 +146,13 @@ class ListFragment : Fragment() {
             holder.favBtn.setText(null)
             holder.favBtn.setTextOn(null)
             holder.favBtn.setTextOff(null)
+
             holder.favBtn.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    favoriteItem.add(item)
+                    favoriteItem.add(item.toString())
                     Log.d("favItem", favoriteItem.toString())
                 } else {
-                    favoriteItem.remove(item)
+                    favoriteItem.remove(item.toString())
                     Log.d("favItem", favoriteItem.toString())
                 }
             }
@@ -158,6 +162,7 @@ class ListFragment : Fragment() {
     }
 
     inner class CustomHolder(view: View): RecyclerView.ViewHolder(view) {
+        val cardview: CardView = view.cardView
         val phoneImage: ImageView = view.phoneImage
         val phoneName: TextView = view.phoneName
         val phoneDetail: TextView = view.phoneDetail
