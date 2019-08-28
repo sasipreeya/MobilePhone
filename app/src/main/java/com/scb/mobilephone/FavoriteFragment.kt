@@ -1,25 +1,35 @@
 package com.scb.mobilephone
 
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.scb.mobilephone.models.PhoneBean
+import kotlinx.android.synthetic.main.favorite_list.view.*
+import kotlinx.android.synthetic.main.fragment_favorite.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
+import kotlinx.android.synthetic.main.phone_list.*
 import kotlinx.android.synthetic.main.phone_list.view.*
+import kotlinx.android.synthetic.main.phone_list.view.phoneName
 
 class FavoriteFragment : Fragment() {
 
-    private var favoriteItem: ArrayList<PhoneBean> = ArrayList()
+    private var favoriteItem: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
     lateinit var mAdapter: FavoriteFragment.CustomAdapter
 
     override fun onCreateView(
@@ -33,6 +43,12 @@ class FavoriteFragment : Fragment() {
         _view.recyclerView.let {
             it.adapter = mAdapter
             it.layoutManager = LinearLayoutManager(activity)
+        }
+
+        feedFavData()
+
+        _view.swipeRefresh.setOnRefreshListener {
+            feedFavData()
         }
 
         return _view
@@ -63,15 +79,34 @@ class FavoriteFragment : Fragment() {
             Glide.with(context).load(item.thumbImageURL).apply(RequestOptions.circleCropTransform())
                     .into(holder.phoneImage)
         }
-
-
     }
 
     inner class CustomHolder(view: View): RecyclerView.ViewHolder(view) {
-        val phoneImage: ImageView = view.phoneImage
-        val phoneName: TextView = view.phoneName
-        val phonePrice: TextView = view.phonePrice
-        val phoneRating: TextView = view.phoneRating
+        val phoneImage: ImageView = view.phoneImageFav
+        val phoneName: TextView = view.phoneNameFav
+        val phonePrice: TextView = view.phonePriceFav
+        val phoneRating: TextView = view.phoneRatingFav
+    }
+
+    private fun feedFavData() {
+
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+            object : BroadcastReceiver(){
+                override fun onReceive(context: Context, intent: Intent) {
+                    favoriteItem.clear()
+                    favoriteItem.addAll(intent.getParcelableArrayListExtra("RECEIVED_MESSAGE"))
+                    Log.d("favPage", favoriteItem.toString())
+                }
+            },
+            IntentFilter("RECEIVED_NEW_MESSAGE")
+        )
+
+        mAdapter.notifyDataSetChanged()
+
+        Handler().postDelayed({
+            view?.swipeRefresh?.isRefreshing = false
+        }, 3000)
+
     }
 
 }

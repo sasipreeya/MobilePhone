@@ -27,6 +27,7 @@ import retrofit2.Response
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.cardview.widget.CardView
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 
 class ListFragment : Fragment() {
@@ -35,7 +36,7 @@ class ListFragment : Fragment() {
     private var mDataArraySorted: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
     private lateinit var mAdapter: ListFragment.CustomAdapter
 
-    private var favoriteItem: ArrayList<String> = ArrayList()
+    private var favoriteItem: ArrayList<PhoneBean> = ArrayList()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -149,16 +150,27 @@ class ListFragment : Fragment() {
 
             holder.favBtn.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    favoriteItem.add(item.toString())
+                    favoriteItem.add(item)
                     Log.d("favItem", favoriteItem.toString())
+                    sendBroadcastMessage(favoriteItem)
                 } else {
-                    favoriteItem.remove(item.toString())
+                    favoriteItem.remove(item)
                     Log.d("favItem", favoriteItem.toString())
+                    sendBroadcastMessage(favoriteItem)
                 }
             }
         }
 
 
+    }
+
+    private fun sendBroadcastMessage(content: ArrayList<PhoneBean>) {
+        // set key
+        Intent("RECEIVED_NEW_MESSAGE").let {
+            // set data key
+            it.putExtra("RECEIVED_MESSAGE", content)
+            LocalBroadcastManager.getInstance(context!!).sendBroadcast(it)
+        }
     }
 
     inner class CustomHolder(view: View): RecyclerView.ViewHolder(view) {
