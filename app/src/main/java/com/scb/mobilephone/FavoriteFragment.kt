@@ -31,8 +31,6 @@ class FavoriteFragment : Fragment() {
     private var favoriteItemSorted: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
     lateinit var mAdapter: CustomAdapter
 
-    var removeItem: Int = 0
-
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -66,7 +64,6 @@ class FavoriteFragment : Fragment() {
                 override fun onReceive(context: Context, intent: Intent) {
                     favoriteItem.clear()
                     favoriteItem.addAll(intent.getParcelableArrayListExtra("RECEIVED_MESSAGE"))
-                    Log.d("favPage", favoriteItem.toString())
                     favoriteItemSorted.clear()
                     favoriteItemSorted.addAll(favoriteItem)
                     mAdapter.notifyDataSetChanged()
@@ -83,17 +80,14 @@ class FavoriteFragment : Fragment() {
             "Price low to high" -> {
                 favoriteItemSorted.clear()
                 favoriteItemSorted.addAll(favoriteItem.sortedBy { it.price })
-                Log.d("favPage", favoriteItemSorted.toString())
             }
             "Price high to low" -> {
                 favoriteItemSorted.clear()
                 favoriteItemSorted.addAll(favoriteItem.sortedByDescending { it.price })
-                Log.d("favPage", favoriteItemSorted.toString())
             }
             "Rating 5-1" -> {
                 favoriteItemSorted.clear()
                 favoriteItemSorted.addAll(favoriteItem.sortedByDescending{ it.rating })
-                Log.d("favPage", favoriteItemSorted.toString())
             }
             else -> {
                 favoriteItemSorted.clear()
@@ -118,7 +112,8 @@ class FavoriteFragment : Fragment() {
         override fun onItemDismiss(position: Int) {
             androidList?.removeAt(position)
             favoriteItem.removeAt(position)
-            Log.d("remove", favoriteItem.toString())
+            Log.d("favItem", favoriteItem.toString())
+            sendBroadcastMessage(favoriteItem)
             notifyItemRemoved(position)
         }
 
@@ -183,6 +178,15 @@ class FavoriteFragment : Fragment() {
         fun onItemMove(fromPosition: Int, toPosition: Int) : Boolean
 
         fun onItemDismiss(position: Int)
+    }
+
+    private fun sendBroadcastMessage(content: ArrayList<PhoneBean>) {
+        // set key
+        Intent("RECEIVED_REMOVE_FAV").let {
+            // set data key
+            it.putExtra("RECEIVED_REMOVE_MESSAGE", content)
+            LocalBroadcastManager.getInstance(context!!).sendBroadcast(it)
+        }
     }
 
 }

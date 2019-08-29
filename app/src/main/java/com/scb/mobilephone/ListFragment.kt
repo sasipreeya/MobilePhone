@@ -1,8 +1,10 @@
 package com.scb.mobilephone
 
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -25,6 +27,8 @@ import kotlinx.android.synthetic.main.phone_list.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ListFragment : Fragment() {
@@ -55,6 +59,18 @@ class ListFragment : Fragment() {
         }
 
         return _view
+    }
+
+    fun getFavItem() {
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+            object : BroadcastReceiver(){
+                override fun onReceive(context: Context, intent: Intent) {
+                    favoriteItem.clear()
+                    favoriteItem.addAll(intent.getParcelableArrayListExtra("RECEIVED_REMOVE_MESSAGE"))
+                }
+            },
+            IntentFilter("RECEIVED_REMOVE_FAV")
+        )
     }
 
     fun feedData(sort: String) {
@@ -145,9 +161,12 @@ class ListFragment : Fragment() {
                 startActivity(intent)
             }
 
-            holder.favBtn.setText(null)
-            holder.favBtn.setTextOn(null)
-            holder.favBtn.setTextOff(null)
+            holder.favBtn.text = null
+            holder.favBtn.textOn = null
+            holder.favBtn.textOff = null
+
+            getFavItem()
+            holder.favBtn.isChecked = item in favoriteItem
 
             holder.favBtn.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
@@ -161,8 +180,6 @@ class ListFragment : Fragment() {
                 }
             }
         }
-
-
     }
 
     private fun sendBroadcastMessage(content: ArrayList<PhoneBean>) {
