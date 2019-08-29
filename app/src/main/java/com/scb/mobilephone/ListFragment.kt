@@ -67,6 +67,7 @@ class ListFragment : Fragment() {
                 override fun onReceive(context: Context, intent: Intent) {
                     favoriteItem.clear()
                     favoriteItem.addAll(intent.getParcelableArrayListExtra("RECEIVED_REMOVE_MESSAGE"))
+                    mAdapter.notifyDataSetChanged()
                 }
             },
             IntentFilter("RECEIVED_REMOVE_FAV")
