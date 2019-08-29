@@ -1,10 +1,13 @@
 package com.scb.mobilephone
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
+import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.ui.main.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -26,8 +29,8 @@ class MainActivity : AppCompatActivity() {
             val mBuilder = AlertDialog.Builder(this@MainActivity)
             mBuilder.setSingleChoiceItems(listItems, -1) { dialogInterface, i ->
                 val selectedItem = listItems[i]
-                sectionsPagerAdapter.mListFragment.feedData(selectedItem)
                 sectionsPagerAdapter.mFavoriteFragment.feedFavData(selectedItem)
+                sectionsPagerAdapter.mListFragment.feedData(selectedItem)
                 dialogInterface.dismiss()
             }
 

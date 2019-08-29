@@ -18,14 +18,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.scb.mobilephone.models.PhoneBean
 import kotlinx.android.synthetic.main.favorite_list.view.*
-import kotlinx.android.synthetic.main.fragment_favorite.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
-import kotlinx.android.synthetic.main.phone_list.*
-import kotlinx.android.synthetic.main.phone_list.view.*
-import kotlinx.android.synthetic.main.phone_list.view.phoneName
 
 class FavoriteFragment : Fragment() {
 
@@ -63,24 +58,8 @@ class FavoriteFragment : Fragment() {
                     favoriteItem.clear()
                     favoriteItem.addAll(intent.getParcelableArrayListExtra("RECEIVED_MESSAGE"))
                     Log.d("favPage", favoriteItem.toString())
-                    when (sort) {
-                        "Price low to high" -> {
-                            favoriteItemSorted.clear()
-                            favoriteItemSorted.addAll(favoriteItem.sortedBy { it.price })
-                        }
-                        "Price high to low" -> {
-                            favoriteItemSorted.clear()
-                            favoriteItemSorted.addAll(favoriteItem.sortedByDescending { it.price })
-                        }
-                        "Rating 5-1" -> {
-                            favoriteItemSorted.clear()
-                            favoriteItemSorted.addAll(favoriteItem.sortedByDescending{ it.rating })
-                        }
-                        else -> {
-                            favoriteItemSorted.clear()
-                            favoriteItemSorted.addAll(favoriteItem)
-                        }
-                    }
+                    favoriteItemSorted.clear()
+                    favoriteItemSorted.addAll(favoriteItem)
                     mAdapter.notifyDataSetChanged()
 
                     Handler().postDelayed({
@@ -90,6 +69,33 @@ class FavoriteFragment : Fragment() {
             },
             IntentFilter("RECEIVED_NEW_MESSAGE")
         )
+
+        when (sort) {
+            "Price low to high" -> {
+                favoriteItemSorted.clear()
+                favoriteItemSorted.addAll(favoriteItem.sortedBy { it.price })
+                Log.d("favPage", favoriteItemSorted.toString())
+            }
+            "Price high to low" -> {
+                favoriteItemSorted.clear()
+                favoriteItemSorted.addAll(favoriteItem.sortedByDescending { it.price })
+                Log.d("favPage", favoriteItemSorted.toString())
+            }
+            "Rating 5-1" -> {
+                favoriteItemSorted.clear()
+                favoriteItemSorted.addAll(favoriteItem.sortedByDescending{ it.rating })
+                Log.d("favPage", favoriteItemSorted.toString())
+            }
+            else -> {
+                favoriteItemSorted.clear()
+                favoriteItemSorted.addAll(favoriteItem)
+            }
+        }
+        mAdapter.notifyDataSetChanged()
+
+        Handler().postDelayed({
+            view?.swipeRefresh?.isRefreshing = false
+        }, 3000)
 
     }
 
