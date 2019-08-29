@@ -1,13 +1,10 @@
 package com.scb.mobilephone
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.ui.main.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 

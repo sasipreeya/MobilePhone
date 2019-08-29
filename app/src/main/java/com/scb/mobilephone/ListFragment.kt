@@ -12,11 +12,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ToggleButton
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.network.ApiInterface
 import kotlinx.android.synthetic.main.fragment_list.view.*
@@ -24,10 +25,6 @@ import kotlinx.android.synthetic.main.phone_list.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.os.Parcel
-import android.os.Parcelable
-import androidx.cardview.widget.CardView
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 
 class ListFragment : Fragment() {

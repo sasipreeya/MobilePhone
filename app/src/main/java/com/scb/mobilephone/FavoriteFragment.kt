@@ -15,18 +15,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.scb.mobilephone.models.PhoneBean
 import kotlinx.android.synthetic.main.favorite_list.view.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FavoriteFragment : Fragment() {
 
     private var favoriteItem: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
     private var favoriteItemSorted: ArrayList<PhoneBean> = ArrayList<PhoneBean>()
-    lateinit var mAdapter: FavoriteFragment.CustomAdapter
+    lateinit var mAdapter: CustomAdapter
+
+    var removeItem: Int = 0
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -35,10 +40,14 @@ class FavoriteFragment : Fragment() {
 
         val _view = inflater.inflate(R.layout.fragment_favorite, container, false)
 
-        mAdapter = CustomAdapter(context!!)
+        mAdapter = CustomAdapter(context!!, favoriteItemSorted)
         _view.recyclerView.let {
             it.adapter = mAdapter
             it.layoutManager = LinearLayoutManager(activity)
+
+            val callback = CustomItemTouchHelperCallback(mAdapter)
+            val itemTouchHelper = ItemTouchHelper(callback)
+            itemTouchHelper.attachToRecyclerView(_view.recyclerView)
         }
 
         feedFavData("data")
@@ -99,8 +108,20 @@ class FavoriteFragment : Fragment() {
 
     }
 
+    inner class CustomAdapter(val context: Context, private val androidList: ArrayList<PhoneBean>) : RecyclerView.Adapter<CustomAdapter.CustomHolder>(), CustomItemTouchHelperListener {
+        override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+            Collections.swap(androidList, fromPosition, toPosition)
+            notifyItemMoved(fromPosition, toPosition)
+            return true
+        }
 
-    inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomHolder>() {
+        override fun onItemDismiss(position: Int) {
+            androidList?.removeAt(position)
+            favoriteItem.removeAt(position)
+            Log.d("remove", favoriteItem.toString())
+            notifyItemRemoved(position)
+        }
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {
             return CustomHolder(
                     LayoutInflater.from(parent.context).inflate(
@@ -123,13 +144,45 @@ class FavoriteFragment : Fragment() {
 
             Glide.with(context).load(item.thumbImageURL).into(holder.phoneImage)
         }
+
+        inner class CustomHolder(view: View): RecyclerView.ViewHolder(view) {
+            val phoneImage: ImageView = view.phoneImageFav
+            val phoneName: TextView = view.phoneNameFav
+            val phonePrice: TextView = view.phonePriceFav
+            val phoneRating: TextView = view.phoneRatingFav
+        }
     }
 
-    inner class CustomHolder(view: View): RecyclerView.ViewHolder(view) {
-        val phoneImage: ImageView = view.phoneImageFav
-        val phoneName: TextView = view.phoneNameFav
-        val phonePrice: TextView = view.phonePriceFav
-        val phoneRating: TextView = view.phoneRatingFav
+    inner class CustomItemTouchHelperCallback(private var listener: CustomItemTouchHelperListener) : ItemTouchHelper.Callback() {
+        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+
+            val dragFlags = 0
+            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
+            return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags)
+        }
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            viewHolder?.let {
+                listener.onItemDismiss(viewHolder.adapterPosition)
+            }
+        }
+
+
+
+    }
+
+    interface CustomItemTouchHelperListener {
+        fun onItemMove(fromPosition: Int, toPosition: Int) : Boolean
+
+        fun onItemDismiss(position: Int)
     }
 
 }
