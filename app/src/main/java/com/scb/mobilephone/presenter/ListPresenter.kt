@@ -79,7 +79,7 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
     }
 
     override fun getFavoriteItems(context: Context) {
-        LocalBroadcastManager.getInstance(context!!).registerReceiver(
+        LocalBroadcastManager.getInstance(context).registerReceiver(
             object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {
                     favoriteItem.clear()
@@ -94,7 +94,7 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         // send favorite items from list page to fragment page
         Intent(FavoriteItemsFromListToFavorite).let {
             it.putExtra(RecieveFavoriteItems, content)
-            LocalBroadcastManager.getInstance(context!!).sendBroadcast(it)
+            LocalBroadcastManager.getInstance(context).sendBroadcast(it)
         }
     }
 }

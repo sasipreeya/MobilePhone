@@ -38,29 +38,29 @@ class FavoritePresenter(_view: FavoriteInterface.FavoriteView) : FavoriteInterfa
         )
     }
 
-    override fun sortFavoritesList(favList: ArrayList<PhoneBean>, sort: String) {
+    override fun sortFavoritesList(phonesList: ArrayList<PhoneBean>, sort: String) {
         favoritesSortList.clear()
         when (sort) {
             PriceLH -> {
-                favoritesSortList.addAll(favList.sortedBy { it.price })
+                favoritesSortList.addAll(phonesList.sortedBy { it.price })
                 favoriteItem.clear()
                 favoriteItem.addAll(favoritesSortList)
                 Log.d("sorted", favoriteItem.toString())
             }
             PriceHL -> {
-                favoritesSortList.addAll(favList.sortedByDescending { it.price })
+                favoritesSortList.addAll(phonesList.sortedByDescending { it.price })
                 favoriteItem.clear()
                 favoriteItem.addAll(favoritesSortList)
                 Log.d("sorted", favoriteItem.toString())
             }
             RatingHL -> {
-                favoritesSortList.addAll(favList.sortedByDescending{ it.rating })
+                favoritesSortList.addAll(phonesList.sortedByDescending{ it.rating })
                 favoriteItem.clear()
                 favoriteItem.addAll(favoritesSortList)
                 Log.d("sorted", favoriteItem.toString())
             }
             else -> {
-                favoritesSortList.addAll(favList)
+                favoritesSortList.addAll(phonesList)
                 favoriteItem.clear()
                 favoriteItem.addAll(favoritesSortList)
             }
@@ -72,7 +72,7 @@ class FavoritePresenter(_view: FavoriteInterface.FavoriteView) : FavoriteInterfa
         // send favorite item after deleted back to list page
         Intent(FavoriteItemsFromFavoriteToList).let {
             it.putExtra(GetFavoriteItems, content)
-            LocalBroadcastManager.getInstance(context!!).sendBroadcast(it)
+            LocalBroadcastManager.getInstance(context).sendBroadcast(it)
         }
     }
 

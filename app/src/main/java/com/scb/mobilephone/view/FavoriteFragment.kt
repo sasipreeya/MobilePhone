@@ -19,6 +19,7 @@ import com.scb.mobilephone.R
 import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.presenter.FavoriteInterface
 import com.scb.mobilephone.presenter.FavoritePresenter
+import com.scb.mobilephone.presenter.FavoritePresenter.Companion.favoritesSortList
 import com.scb.mobilephone.presenter.ListPresenter.Companion.favoriteItem
 import kotlinx.android.synthetic.main.favorite_list.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -31,10 +32,8 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var favoritePresenter: FavoriteInterface.FavoritePresenter
-        lateinit var mAdapter: FavoriteFragment.CustomAdapter
+        lateinit var mAdapter: CustomAdapter
     }
-
-    private var favoriteItemSorted: ArrayList<PhoneBean> = ArrayList()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +42,10 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
 
         val _view = inflater.inflate(R.layout.fragment_favorite, container, false)
 
-        mAdapter = CustomAdapter(context!!, favoriteItemSorted)
+        favoritePresenter = FavoritePresenter(this)
+        favoritePresenter.getFavoritesList(context!!)
+
+        mAdapter = CustomAdapter(context!!, favoritesSortList)
         _view.recyclerView.let {
             it.adapter = mAdapter
             it.layoutManager = LinearLayoutManager(activity)
@@ -52,9 +54,6 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
             val itemTouchHelper = ItemTouchHelper(callback)
             itemTouchHelper.attachToRecyclerView(_view.recyclerView)
         }
-
-        favoritePresenter = FavoritePresenter(this)
-        favoritePresenter.getFavoritesList(context!!)
 
         return _view
     }
@@ -68,7 +67,7 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
     }
 
     override fun showFavoritesList(phonesSortedList: ArrayList<PhoneBean>) {
-        FavoriteFragment.mAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
 
         swipeRefresh.setOnRefreshListener {
             favoritePresenter.getFavoritesList(context!!)
@@ -88,7 +87,7 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
             androidList.removeAt(position)
             favoriteItem.removeAt(position)
             Log.d("favItem", favoriteItem.toString())
-            favoritePresenter.sendFavoriteItems(context, favoriteItem)
+            // favoritePresenter.sendFavoriteItems(context, favoriteItem)
             notifyItemRemoved(position)
         }
 
