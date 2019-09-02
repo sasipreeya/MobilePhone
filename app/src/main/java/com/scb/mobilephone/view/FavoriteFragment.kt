@@ -88,6 +88,7 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
             favoriteItem.removeAt(position)
             Log.d("favItem", favoriteItem.toString())
             // favoritePresenter.sendFavoriteItems(context, favoriteItem)
+            ListFragment.mAdapter.notifyDataSetChanged()
             notifyItemRemoved(position)
         }
 
