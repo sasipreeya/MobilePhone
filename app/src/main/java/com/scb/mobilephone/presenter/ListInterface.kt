@@ -26,5 +26,9 @@ interface ListInterface {
         fun sendFavoriteItems(context: Context, content: ArrayList<PhoneBean>)
 
         fun openDetailPage(intent: Intent, thumbImageURL: String, name: String, brand: String, description: String, id: Int, rating: Double, price: Double)
+
+        fun setupDatabase(context: Context)
+
+        fun setupTreadManager()
     }
 }

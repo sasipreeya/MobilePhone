@@ -1,11 +1,9 @@
 package com.scb.mobilephone.models.database.dao
 
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.scb.mobilephone.models.database.entities.FavoritesListEntity
 
+@Dao
 interface FavoritesListDAO {
 
     // favorites_list

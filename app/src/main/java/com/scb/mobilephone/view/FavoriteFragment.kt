@@ -26,9 +26,7 @@ import com.scb.mobilephone.presenter.ListPresenter.Companion.favoriteItem
 import kotlinx.android.synthetic.main.favorite_list.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
-import kotlinx.android.synthetic.main.phone_list.view.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
 

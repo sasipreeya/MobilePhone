@@ -2,16 +2,13 @@ package com.scb.mobilephone.presenter
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.scb.mobilephone.extensions.FavoriteItemsFromFavoriteToList
-import com.scb.mobilephone.extensions.FavoriteItemsFromListToFavorite
-import com.scb.mobilephone.extensions.GetFavoriteItems
-import com.scb.mobilephone.extensions.RecieveFavoriteItems
+import com.scb.mobilephone.extensions.*
 import com.scb.mobilephone.models.PhoneBean
+import com.scb.mobilephone.models.database.AppDatabase
 import com.scb.mobilephone.models.network.ApiInterface
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,17 +22,22 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         var favoriteItem: ArrayList<PhoneBean> = ArrayList()
     }
 
+    var mDatabaseAdapter: AppDatabase? = null
+    lateinit var mTreadManager: ThreadManager
+
     private var view: ListInterface.ListView = _view
 
     override fun feedPhonesList() {
         val _call = ApiInterface.getClient().getPhones()
-
         _call.enqueue(object : Callback<List<PhoneBean>> {
             override fun onFailure(call: Call<List<PhoneBean>>, t: Throwable) {
                 Log.d("error", t.message.toString())
             }
 
-            override fun onResponse(call: Call<List<PhoneBean>>, response: Response<List<PhoneBean>>) {
+            override fun onResponse(
+                call: Call<List<PhoneBean>>,
+                response: Response<List<PhoneBean>>
+            ) {
                 Log.d("response", response.body().toString())
                 if (response.isSuccessful) {
                     mDataArray.clear()
@@ -44,8 +46,8 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
                     view.hideLoading()
                 }
             }
-
         })
+
     }
 
     override fun getPhonesList() {
@@ -53,10 +55,10 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         view.hideLoading()
     }
 
-    override fun getFavoriteItems(context: Context) {
+    override fun getFavoriteItems(context: android.content.Context) {
         LocalBroadcastManager.getInstance(context).registerReceiver(
             object : BroadcastReceiver() {
-                override fun onReceive(context: Context, intent: Intent) {
+                override fun onReceive(context: android.content.Context, intent: Intent) {
                     favoriteItem.clear()
                     favoriteItem.addAll(intent.getParcelableArrayListExtra(GetFavoriteItems))
                 }
@@ -65,7 +67,10 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         )
     }
 
-    override fun sendFavoriteItems(context: Context, content: ArrayList<PhoneBean>) {
+    override fun sendFavoriteItems(
+        context: android.content.Context,
+        content: ArrayList<PhoneBean>
+    ) {
         // send favorite items from list page to fragment page
         Intent(FavoriteItemsFromListToFavorite).let {
             it.putExtra(RecieveFavoriteItems, content)
@@ -90,5 +95,17 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         intent.putExtra("id", id)
         intent.putExtra("rating", rating)
         intent.putExtra("price", price)
+    }
+
+    override fun setupDatabase(context: android.content.Context) {
+        mDatabaseAdapter = AppDatabase.getInstance(context).also {
+            it.openHelper.readableDatabase
+        }
+    }
+
+    override fun setupTreadManager() {
+        mTreadManager = ThreadManager("database").also {
+            it.start()
+        }
     }
 }

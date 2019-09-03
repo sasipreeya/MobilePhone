@@ -31,6 +31,7 @@ class ListFragment : Fragment(), ListInterface.ListView {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var listPresenter: ListInterface.ListPresenter
+        @SuppressLint("StaticFieldLeak")
         lateinit var mAdapter: CustomAdapter
     }
 
