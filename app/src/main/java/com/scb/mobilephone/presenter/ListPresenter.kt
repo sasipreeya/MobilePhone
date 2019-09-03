@@ -23,7 +23,7 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
     }
 
     var mDatabaseAdapter: AppDatabase? = null
-    lateinit var mTreadManager: ThreadManager
+    lateinit var mThreadManager: ThreadManager
 
     private var view: ListInterface.ListView = _view
 
@@ -45,9 +45,9 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
                     view.showPhonesList(mDataArray)
                     view.hideLoading()
                 }
+
             }
         })
-
     }
 
     override fun getPhonesList() {
@@ -104,7 +104,7 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
     }
 
     override fun setupTreadManager() {
-        mTreadManager = ThreadManager("database").also {
+        mThreadManager = ThreadManager("database").also {
             it.start()
         }
     }

@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.scb.mobilephone.extensions.DatabaseName
 import com.scb.mobilephone.models.database.converters.ArrayListConverter
 import com.scb.mobilephone.models.database.dao.FavoritesListDAO
 import com.scb.mobilephone.models.database.dao.PhonesListDAO
@@ -26,7 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
         fun getInstance(context: Context): AppDatabase {
             if (INSTANCE == null) {
                 synchronized(LOCK_INMEM) {
-                    INSTANCE = Room.inMemoryDatabaseBuilder(context.applicationContext, AppDatabase::class.java)
+                    INSTANCE = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, DatabaseName)
                         .fallbackToDestructiveMigration()
                         .build()
                 }

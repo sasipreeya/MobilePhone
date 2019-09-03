@@ -18,7 +18,7 @@ data class PhonesListEntity(
 
     override fun writeToParcel(parcel: Parcel?, p1: Int) {
         parcel?.writeValue(id)
-        parcel?.writeList(phonesList as List<*>?)
+        parcel?.writeList(phonesList as ArrayList<*>?)
     }
 
     override fun describeContents(): Int {

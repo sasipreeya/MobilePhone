@@ -8,3 +8,5 @@ const val FavoriteItemsFromListToFavorite = "Favorite Items From List To Favorit
 const val RecieveFavoriteItems = "Recieve Favorite Items"
 const val FavoriteItemsFromFavoriteToList = "Favorite Items From Favorite To List"
 const val GetFavoriteItems = "Get Favorite Items"
+
+const val DatabaseName = "Database"

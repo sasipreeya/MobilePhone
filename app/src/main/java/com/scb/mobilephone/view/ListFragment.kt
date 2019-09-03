@@ -56,6 +56,8 @@ class ListFragment : Fragment(), ListInterface.ListView {
 
         listPresenter = ListPresenter(this)
         listPresenter.feedPhonesList()
+        // listPresenter.setupDatabase(context!!)
+        // listPresenter.setupTreadManager()
         super.onViewCreated(view, savedInstanceState)
     }
 
