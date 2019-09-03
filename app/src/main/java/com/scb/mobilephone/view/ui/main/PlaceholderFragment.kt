@@ -1,4 +1,4 @@
-package com.scb.mobilephone.ui.main
+package com.scb.mobilephone.view.ui.main
 
 import android.os.Bundle
 import android.view.LayoutInflater

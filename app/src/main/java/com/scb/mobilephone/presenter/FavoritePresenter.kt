@@ -5,12 +5,12 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.scb.mobilephone.extensions.*
+import com.scb.mobilephone.extensions.FavoriteItemsFromFavoriteToList
+import com.scb.mobilephone.extensions.FavoriteItemsFromListToFavorite
+import com.scb.mobilephone.extensions.GetFavoriteItems
 import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.presenter.ListPresenter.Companion.favoriteItem
-import com.scb.mobilephone.view.FavoriteFragment
 
 class FavoritePresenter(_view: FavoriteInterface.FavoriteView) : FavoriteInterface.FavoritePresenter {
 
@@ -26,46 +26,15 @@ class FavoritePresenter(_view: FavoriteInterface.FavoriteView) : FavoriteInterfa
         LocalBroadcastManager.getInstance(context).registerReceiver(
             object : BroadcastReceiver(){
                 override fun onReceive(context: Context, intent: Intent) {
-                    // favoriteItem.clear()
-                    // favoriteItem.addAll(intent.getParcelableArrayListExtra(RecieveFavoriteItems))
                     favoritesSortList.clear()
                     favoritesSortList.addAll(favoriteItem)
+                    // favoritesSortList.addAll(intent.getParcelableArrayListExtra(RecieveFavoriteItems))
                     view.showFavoritesList(favoritesSortList)
                     view.hideLoading()
                 }
             },
             IntentFilter(FavoriteItemsFromListToFavorite)
         )
-    }
-
-    override fun sortFavoritesList(phonesList: ArrayList<PhoneBean>, sort: String) {
-        favoritesSortList.clear()
-        when (sort) {
-            PriceLH -> {
-                favoritesSortList.addAll(phonesList.sortedBy { it.price })
-                favoriteItem.clear()
-                favoriteItem.addAll(favoritesSortList)
-                Log.d("sorted", favoriteItem.toString())
-            }
-            PriceHL -> {
-                favoritesSortList.addAll(phonesList.sortedByDescending { it.price })
-                favoriteItem.clear()
-                favoriteItem.addAll(favoritesSortList)
-                Log.d("sorted", favoriteItem.toString())
-            }
-            RatingHL -> {
-                favoritesSortList.addAll(phonesList.sortedByDescending{ it.rating })
-                favoriteItem.clear()
-                favoriteItem.addAll(favoritesSortList)
-                Log.d("sorted", favoriteItem.toString())
-            }
-            else -> {
-                favoritesSortList.addAll(phonesList)
-                favoriteItem.clear()
-                favoriteItem.addAll(favoritesSortList)
-            }
-        }
-        FavoriteFragment.mAdapter.notifyDataSetChanged()
     }
 
     override fun sendFavoriteItems(context: Context, content: ArrayList<PhoneBean>) {

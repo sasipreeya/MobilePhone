@@ -1,4 +1,4 @@
-package com.scb.mobilephone.network;
+package com.scb.mobilephone.models.network;
 
 import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.models.PhotoBean

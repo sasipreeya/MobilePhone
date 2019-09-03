@@ -3,7 +3,7 @@ package com.scb.mobilephone.presenter
 import android.annotation.SuppressLint
 import android.util.Log
 import com.scb.mobilephone.models.PhotoBean
-import com.scb.mobilephone.network.ApiInterface
+import com.scb.mobilephone.models.network.ApiInterface
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

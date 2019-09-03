@@ -3,6 +3,7 @@ package com.scb.mobilephone.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +26,7 @@ import com.scb.mobilephone.presenter.ListPresenter.Companion.favoriteItem
 import kotlinx.android.synthetic.main.favorite_list.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
+import kotlinx.android.synthetic.main.phone_list.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -32,6 +35,7 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var favoritePresenter: FavoriteInterface.FavoritePresenter
+        @SuppressLint("StaticFieldLeak")
         lateinit var mAdapter: CustomAdapter
     }
 
@@ -42,20 +46,23 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
 
         val _view = inflater.inflate(R.layout.fragment_favorite, container, false)
 
+        return _view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         favoritePresenter = FavoritePresenter(this)
         favoritePresenter.getFavoritesList(context!!)
 
         mAdapter = CustomAdapter(context!!, favoritesSortList)
-        _view.recyclerView.let {
+        view.recyclerView.let {
             it.adapter = mAdapter
             it.layoutManager = LinearLayoutManager(activity)
 
             val callback = CustomItemTouchHelperCallback(mAdapter)
             val itemTouchHelper = ItemTouchHelper(callback)
-            itemTouchHelper.attachToRecyclerView(_view.recyclerView)
+            itemTouchHelper.attachToRecyclerView(view.recyclerView)
         }
-
-        return _view
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun showLoading() {
@@ -106,6 +113,7 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
             return favoriteItem.count()
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
             val item = favoriteItem[position]
             holder.phoneName.text = item.name
@@ -113,9 +121,22 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
             holder.phoneRating.text = "Rating : " + item.rating
 
             Glide.with(context).load(item.thumbImageURL).into(holder.phoneImage)
+
+            holder.cardview.setOnClickListener {
+                val intent = Intent(activity, DetailActivity::class.java)
+                intent.putExtra("image", item.thumbImageURL)
+                intent.putExtra("name", item.name)
+                intent.putExtra("brand", item.brand)
+                intent.putExtra("detail", item.description)
+                intent.putExtra("id", item.id)
+                intent.putExtra("rating", item.rating)
+                intent.putExtra("price", item.price)
+                startActivity(intent)
+            }
         }
 
         inner class CustomHolder(view: View): RecyclerView.ViewHolder(view) {
+            val cardview: CardView = view.cardViewFav
             val phoneImage: ImageView = view.phoneImageFav
             val phoneName: TextView = view.phoneNameFav
             val phonePrice: TextView = view.phonePriceFav
@@ -140,7 +161,7 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewHolder?.let {
+            viewHolder.let {
                 listener.onItemDismiss(viewHolder.adapterPosition)
             }
         }

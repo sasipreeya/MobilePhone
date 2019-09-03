@@ -1,11 +1,9 @@
 package com.scb.mobilephone.view
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,22 +35,27 @@ class ListFragment : Fragment(), ListInterface.ListView {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         val _view = inflater.inflate(R.layout.fragment_list, container, false)
 
+        return _view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mAdapter = CustomAdapter(context!!)
-        _view.recyclerView.let {
+        view.recyclerView.let {
             it.adapter = mAdapter
             it.layoutManager = LinearLayoutManager(activity)
         }
 
+        progressBar.visibility = View.VISIBLE
+
         listPresenter = ListPresenter(this)
         listPresenter.feedPhonesList()
-
-        return _view
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun showLoading() {
@@ -60,6 +63,7 @@ class ListFragment : Fragment(), ListInterface.ListView {
     }
 
     override fun hideLoading() {
+        progressBar.visibility = View.GONE
         swipeRefresh.isRefreshing = false
     }
 
@@ -68,18 +72,18 @@ class ListFragment : Fragment(), ListInterface.ListView {
         mAdapter.notifyDataSetChanged()
 
         swipeRefresh.setOnRefreshListener {
-            listPresenter.feedPhonesList()
+            listPresenter.getPhonesList()
         }
     }
 
     inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {
             return CustomHolder(
-                    LayoutInflater.from(parent.context).inflate(
-                        R.layout.phone_list,
-                            parent,
-                            false
-                    )
+                LayoutInflater.from(parent.context).inflate(
+                    R.layout.phone_list,
+                    parent,
+                    false
+                )
             )
         }
 
@@ -103,13 +107,16 @@ class ListFragment : Fragment(), ListInterface.ListView {
 
             holder.cardview.setOnClickListener {
                 val intent = Intent(activity, DetailActivity::class.java)
-                intent.putExtra("image", item.thumbImageURL)
-                intent.putExtra("name", item.name)
-                intent.putExtra("brand", item.brand)
-                intent.putExtra("detail", item.description)
-                intent.putExtra("id", item.id)
-                intent.putExtra("rating", item.rating)
-                intent.putExtra("price", item.price)
+                listPresenter.openDetailPage(
+                    intent,
+                    item.thumbImageURL,
+                    item.name,
+                    item.brand,
+                    item.description,
+                    item.id,
+                    item.rating,
+                    item.price
+                )
                 startActivity(intent)
             }
 
@@ -123,18 +130,16 @@ class ListFragment : Fragment(), ListInterface.ListView {
             holder.favBtn.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     favoriteItem.add(item)
-                    Log.d("favItem", favoriteItem.toString())
                     listPresenter.sendFavoriteItems(context, favoriteItem)
                 } else {
                     favoriteItem.remove(item)
-                    Log.d("favItem", favoriteItem.toString())
                     listPresenter.sendFavoriteItems(context, favoriteItem)
                 }
             }
         }
     }
 
-    inner class CustomHolder(view: View): RecyclerView.ViewHolder(view) {
+    inner class CustomHolder(view: View) : RecyclerView.ViewHolder(view) {
         val cardview: CardView = view.cardView
         val phoneImage: ImageView = view.phoneImage
         val phoneName: TextView = view.phoneName

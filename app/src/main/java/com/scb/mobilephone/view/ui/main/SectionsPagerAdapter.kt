@@ -1,4 +1,4 @@
-package com.scb.mobilephone.ui.main
+package com.scb.mobilephone.view.ui.main
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -15,8 +15,8 @@ private val TAB_TITLES = arrayOf(
 
 class SectionsPagerAdapter(private val context: MainActivity, fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-    lateinit var mListFragment: ListFragment
-    lateinit var mFavoriteFragment: FavoriteFragment
+    private lateinit var mListFragment: ListFragment
+    private lateinit var mFavoriteFragment: FavoriteFragment
 
     override fun getItem(position: Int): Fragment {
         return when (position) {

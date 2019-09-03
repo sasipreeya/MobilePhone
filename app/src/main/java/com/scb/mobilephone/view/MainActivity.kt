@@ -1,7 +1,6 @@
 package com.scb.mobilephone.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
@@ -12,9 +11,9 @@ import com.scb.mobilephone.extensions.PriceLH
 import com.scb.mobilephone.extensions.RatingHL
 import com.scb.mobilephone.presenter.ListPresenter.Companion.favoriteItem
 import com.scb.mobilephone.presenter.ListPresenter.Companion.mDataArray
-import com.scb.mobilephone.ui.main.SectionsPagerAdapter
-import com.scb.mobilephone.view.FavoriteFragment.Companion.favoritePresenter
-import com.scb.mobilephone.view.ListFragment.Companion.listPresenter
+import com.scb.mobilephone.presenter.SortPresenter
+import com.scb.mobilephone.presenter.SortPresenter.Companion.sortPresenter
+import com.scb.mobilephone.view.ui.main.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -30,14 +29,15 @@ class MainActivity : AppCompatActivity() {
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
 
+        sortPresenter = SortPresenter()
+
         sortBtn.setOnClickListener {
             val listItems = arrayOf(PriceLH, PriceHL, RatingHL)
             val mBuilder = AlertDialog.Builder(this@MainActivity)
             mBuilder.setSingleChoiceItems(listItems, -1) { dialogInterface, i ->
                 val selectedItem = listItems[i]
-                listPresenter.sortPhonesList(mDataArray!!, selectedItem)
-                favoritePresenter.sortFavoritesList(favoriteItem!!, selectedItem)
-                Log.d("sorted", selectedItem)
+                sortPresenter.sortDataList(mDataArray, selectedItem)
+                sortPresenter.sortDataList(favoriteItem, selectedItem)
                 dialogInterface.dismiss()
             }
 

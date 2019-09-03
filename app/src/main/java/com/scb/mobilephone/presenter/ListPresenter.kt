@@ -7,10 +7,12 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.scb.mobilephone.extensions.*
+import com.scb.mobilephone.extensions.FavoriteItemsFromFavoriteToList
+import com.scb.mobilephone.extensions.FavoriteItemsFromListToFavorite
+import com.scb.mobilephone.extensions.GetFavoriteItems
+import com.scb.mobilephone.extensions.RecieveFavoriteItems
 import com.scb.mobilephone.models.PhoneBean
-import com.scb.mobilephone.network.ApiInterface
-import com.scb.mobilephone.view.ListFragment.Companion.mAdapter
+import com.scb.mobilephone.models.network.ApiInterface
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,7 +22,6 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
     companion object {
         @SuppressLint("StaticFieldLeak")
         var mDataArray: ArrayList<PhoneBean> = ArrayList()
-        var mDataSortedArray: ArrayList<PhoneBean> = ArrayList()
         var favoriteItem: ArrayList<PhoneBean> = ArrayList()
     }
 
@@ -47,35 +48,9 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         })
     }
 
-    override fun sortPhonesList(phonesList: ArrayList<PhoneBean>, sort: String) {
-        mDataSortedArray.clear()
-        when (sort) {
-            PriceLH -> {
-                mDataSortedArray.addAll(phonesList.sortedBy { it.price })
-                mDataArray.clear()
-                mDataArray.addAll(mDataSortedArray)
-                Log.d("sorted", mDataArray.toString())
-            }
-            PriceHL -> {
-                mDataSortedArray.addAll(phonesList.sortedByDescending { it.price })
-                mDataArray.clear()
-                mDataArray.addAll(mDataSortedArray)
-                Log.d("sorted", mDataArray.toString())
-            }
-            RatingHL -> {
-                mDataSortedArray.addAll(phonesList.sortedByDescending { it.rating })
-                mDataArray.clear()
-                mDataArray.addAll(mDataSortedArray)
-                Log.d("sorted", mDataArray.toString())
-            }
-            else -> {
-                mDataSortedArray.addAll(phonesList)
-                mDataArray.clear()
-                mDataArray.addAll(mDataSortedArray)
-                Log.d("sorted", mDataArray.toString())
-            }
-        }
-        mAdapter.notifyDataSetChanged()
+    override fun getPhonesList() {
+        view.showPhonesList(mDataArray)
+        view.hideLoading()
     }
 
     override fun getFavoriteItems(context: Context) {
@@ -96,5 +71,24 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
             it.putExtra(RecieveFavoriteItems, content)
             LocalBroadcastManager.getInstance(context).sendBroadcast(it)
         }
+    }
+
+    override fun openDetailPage(
+        intent: Intent,
+        thumbImageURL: String,
+        name: String,
+        brand: String,
+        description: String,
+        id: Int,
+        rating: Double,
+        price: Double
+    ) {
+        intent.putExtra("image", thumbImageURL)
+        intent.putExtra("name", name)
+        intent.putExtra("brand", brand)
+        intent.putExtra("detail", description)
+        intent.putExtra("id", id)
+        intent.putExtra("rating", rating)
+        intent.putExtra("price", price)
     }
 }

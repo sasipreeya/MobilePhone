@@ -18,8 +18,6 @@ interface FavoriteInterface {
 
         fun getFavoritesList(context: Context)
 
-        fun sortFavoritesList(phonesList: ArrayList<PhoneBean>, sort: String)
-
         fun sendFavoriteItems(context: Context, content: ArrayList<PhoneBean>)
     }
 
