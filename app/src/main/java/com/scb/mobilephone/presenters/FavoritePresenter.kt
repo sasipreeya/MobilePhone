@@ -11,6 +11,7 @@ import com.scb.mobilephone.extensions.FavoriteItemsFromListToFavorite
 import com.scb.mobilephone.extensions.GetFavoriteItems
 import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.presenters.ListPresenter.Companion.favoriteItem
+import com.scb.mobilephone.presenters.ListPresenter.Companion.mDatabaseAdapter
 
 class FavoritePresenter(_view: FavoriteInterface.FavoriteView) : FavoriteInterface.FavoritePresenter {
 
@@ -22,27 +23,14 @@ class FavoritePresenter(_view: FavoriteInterface.FavoriteView) : FavoriteInterfa
     private var view: FavoriteInterface.FavoriteView = _view
 
     override fun getFavoritesList(context: Context) {
-        // get favorite items from list page
-        LocalBroadcastManager.getInstance(context).registerReceiver(
-            object : BroadcastReceiver(){
-                override fun onReceive(context: Context, intent: Intent) {
-                    favoritesSortList.clear()
-                    favoritesSortList.addAll(favoriteItem)
-                    // favoritesSortList.addAll(intent.getParcelableArrayListExtra(RecieveFavoriteItems))
-                    view.showFavoritesList(favoritesSortList)
-                    view.hideLoading()
-                }
-            },
-            IntentFilter(FavoriteItemsFromListToFavorite)
-        )
-    }
-
-    override fun sendFavoriteItems(context: Context, content: ArrayList<PhoneBean>) {
-        // send favorite item after deleted back to list page
-        Intent(FavoriteItemsFromFavoriteToList).let {
-            it.putExtra(GetFavoriteItems, content)
-            LocalBroadcastManager.getInstance(context).sendBroadcast(it)
+        val task = Runnable {
+            val favoritesList = mDatabaseAdapter!!.favoritesListDao().queryFavoritesList()!!.favoritesList
+            favoritesSortList.clear()
+            favoritesSortList.addAll(favoritesList)
         }
+        ListPresenter.mThreadManager.postTask(task)
+        view.showFavoritesList(favoritesSortList)
+        view.hideLoading()
     }
 
 }

@@ -1,13 +1,16 @@
 package com.scb.mobilephone.presenters
 
 import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
+import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.scb.mobilephone.extensions.*
 import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.models.database.AppDatabase
+import com.scb.mobilephone.models.database.entities.FavoritesListEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.models.network.ApiInterface
 import retrofit2.Call
@@ -25,26 +28,11 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
     private var mDataArray: ArrayList<PhoneBean> = ArrayList()
     private var view: ListInterface.ListView = _view
 
-    override fun keepInDatabase(phonesList: ArrayList<PhoneBean>) {
-        val task = Runnable {
-            val result = mDatabaseAdapter!!.phonesListDao().queryPhonesList()
-            if (result == null) {
-                // insert
-                mDatabaseAdapter!!.phonesListDao().addPhonesList(PhonesListEntity(1, phonesList))
-                Log.d("database", mDatabaseAdapter!!.phonesListDao().queryPhonesList().toString())
-            } else {
-                // update
-                mDatabaseAdapter!!.phonesListDao().updatePhonesList(PhonesListEntity(1, phonesList))
-                Log.d("database", mDatabaseAdapter!!.phonesListDao().queryPhonesList().toString())
-            }
-        }
-        mThreadManager.postTask(task)
-    }
-
-    override fun feedPhonesList() {
+    override fun feedPhonesList(context: Context) {
         val _call = ApiInterface.getClient().getPhones()
         _call.enqueue(object : Callback<List<PhoneBean>> {
             override fun onFailure(call: Call<List<PhoneBean>>, t: Throwable) {
+                Toast.makeText(context, "Fail to get data from API", Toast.LENGTH_LONG).show()
                 Log.d("error", t.message.toString())
             }
 
@@ -65,35 +53,28 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         })
     }
 
+    override fun keepInDatabase(phonesList: ArrayList<PhoneBean>) {
+        val task = Runnable {
+            val result = mDatabaseAdapter!!.phonesListDao().queryPhonesList()
+            if (result == null) {
+                // insert
+                mDatabaseAdapter!!.phonesListDao().addPhonesList(PhonesListEntity(1, phonesList))
+                Log.d("database", mDatabaseAdapter!!.phonesListDao().queryPhonesList().toString())
+            } else {
+                // update
+                mDatabaseAdapter!!.phonesListDao().updatePhonesList(PhonesListEntity(1, phonesList))
+                Log.d("database", mDatabaseAdapter!!.phonesListDao().queryPhonesList().toString())
+            }
+        }
+        mThreadManager.postTask(task)
+    }
+
     override fun getPhonesList() {
         val task = Runnable {
             view.showPhonesList(mDatabaseAdapter!!.phonesListDao().queryPhonesList()!!.phonesList)
         }
         mThreadManager.postTask(task)
         view.hideLoading()
-    }
-
-    override fun getFavoriteItems(context: android.content.Context) {
-        LocalBroadcastManager.getInstance(context).registerReceiver(
-            object : BroadcastReceiver() {
-                override fun onReceive(context: android.content.Context, intent: Intent) {
-                    favoriteItem.clear()
-                    favoriteItem.addAll(intent.getParcelableArrayListExtra(GetFavoriteItems))
-                }
-            },
-            IntentFilter(FavoriteItemsFromFavoriteToList)
-        )
-    }
-
-    override fun sendFavoriteItems(
-        context: android.content.Context,
-        content: ArrayList<PhoneBean>
-    ) {
-        // send favorite items from list page to fragment page
-        Intent(FavoriteItemsFromListToFavorite).let {
-            it.putExtra(RecieveFavoriteItems, content)
-            LocalBroadcastManager.getInstance(context).sendBroadcast(it)
-        }
     }
 
     override fun openDetailPage(
@@ -115,7 +96,7 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         intent.putExtra("price", price)
     }
 
-    override fun setupDatabase(context: android.content.Context) {
+    override fun setupDatabase(context: Context) {
         mDatabaseAdapter = AppDatabase.getInstance(context).also {
             it.openHelper.readableDatabase
         }
@@ -125,5 +106,18 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         mThreadManager = ThreadManager("database").also {
             it.start()
         }
+    }
+
+    override fun updateFavoritesList(favoritesList: ArrayList<PhoneBean>) {
+        val task = Runnable {
+            val result = mDatabaseAdapter!!.favoritesListDao().queryFavoritesList()
+            if (result == null) {
+                mDatabaseAdapter!!.favoritesListDao().addFavoritesList(FavoritesListEntity(null, favoritesList))
+            } else {
+                mDatabaseAdapter!!.favoritesListDao().updateFavoritesList(FavoritesListEntity(1, favoritesList))
+            }
+            Log.d("database", mDatabaseAdapter!!.favoritesListDao().queryFavoritesList().toString())
+        }
+        mThreadManager.postTask(task)
     }
 }

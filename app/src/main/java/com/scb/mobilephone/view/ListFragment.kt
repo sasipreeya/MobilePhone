@@ -58,7 +58,7 @@ class ListFragment : Fragment(), ListInterface.ListView {
         listPresenter = ListPresenter(this)
         listPresenter.setupTreadManager()
         listPresenter.setupDatabase(context!!)
-        listPresenter.feedPhonesList()
+        listPresenter.feedPhonesList(context!!)
 
         val task = Runnable {
             phonesList = mDatabaseAdapter!!.phonesListDao().queryPhonesList()!!.phonesList
@@ -134,16 +134,15 @@ class ListFragment : Fragment(), ListInterface.ListView {
             holder.favBtn.textOn = null
             holder.favBtn.textOff = null
 
-            listPresenter.getFavoriteItems(context)
             holder.favBtn.isChecked = item in favoriteItem
 
             holder.favBtn.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     favoriteItem.add(item)
-                    listPresenter.sendFavoriteItems(context, favoriteItem)
+                    listPresenter.updateFavoritesList(favoriteItem)
                 } else {
                     favoriteItem.remove(item)
-                    listPresenter.sendFavoriteItems(context, favoriteItem)
+                    listPresenter.updateFavoritesList(favoriteItem)
                 }
             }
         }

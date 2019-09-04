@@ -17,8 +17,6 @@ interface FavoriteInterface {
     interface FavoritePresenter {
 
         fun getFavoritesList(context: Context)
-
-        fun sendFavoriteItems(context: Context, content: ArrayList<PhoneBean>)
     }
 
 }

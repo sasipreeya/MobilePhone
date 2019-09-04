@@ -19,18 +19,16 @@ interface ListInterface {
 
         fun keepInDatabase(phonesList: ArrayList<PhoneBean>)
 
-        fun feedPhonesList()
+        fun feedPhonesList(context: Context)
 
         fun getPhonesList()
-
-        fun getFavoriteItems(context: Context)
-
-        fun sendFavoriteItems(context: Context, content: ArrayList<PhoneBean>)
 
         fun openDetailPage(intent: Intent, thumbImageURL: String, name: String, brand: String, description: String, id: Int, rating: Double, price: Double)
 
         fun setupDatabase(context: Context)
 
         fun setupTreadManager()
+
+        fun updateFavoritesList(favoritesList: ArrayList<PhoneBean>)
     }
 }

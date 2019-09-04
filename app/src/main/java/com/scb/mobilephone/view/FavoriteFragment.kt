@@ -42,6 +42,8 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
             savedInstanceState: Bundle?
     ): View? {
 
+        mAdapter = CustomAdapter(context!!, favoritesSortList)
+
         val _view = inflater.inflate(R.layout.fragment_favorite, container, false)
 
         return _view
@@ -108,12 +110,12 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
         }
 
         override fun getItemCount(): Int {
-            return favoriteItem.count()
+            return favoritesSortList.count()
         }
 
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
-            val item = favoriteItem[position]
+            val item = favoritesSortList[position]
             holder.phoneName.text = item.name
             holder.phonePrice.text = item.price.toString()
             holder.phoneRating.text = "Rating : " + item.rating
