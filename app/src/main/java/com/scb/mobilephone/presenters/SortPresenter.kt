@@ -5,6 +5,8 @@ import com.scb.mobilephone.extensions.PriceHL
 import com.scb.mobilephone.extensions.PriceLH
 import com.scb.mobilephone.extensions.RatingHL
 import com.scb.mobilephone.models.PhoneBean
+import com.scb.mobilephone.models.database.entities.FavoritesListEntity
+import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.view.FavoriteFragment
 import com.scb.mobilephone.view.ListFragment
 
@@ -41,8 +43,25 @@ class SortPresenter : SortInterface.SortPresenter {
                 list.addAll(sortedList)
             }
         }
-        FavoriteFragment.mAdapter.notifyDataSetChanged()
+    }
+
+    override fun updatePhonesList(phonesList: ArrayList<PhoneBean>) {
+        val task = Runnable {
+            ListPresenter.mDatabaseAdapter!!.phonesListDao().updatePhonesList(
+                PhonesListEntity(1, phonesList)
+            )
+        }
+        ListPresenter.mThreadManager.postTask(task)
         ListFragment.mAdapter.notifyDataSetChanged()
     }
 
+    override fun updateFavoritesList(favoritesList: ArrayList<PhoneBean>) {
+        val task = Runnable {
+            ListPresenter.mDatabaseAdapter!!.favoritesListDao().updateFavoritesList(
+                FavoritesListEntity(1, favoritesList)
+            )
+        }
+        ListPresenter.mThreadManager.postTask(task)
+        FavoriteFragment.mAdapter.notifyDataSetChanged()
+    }
 }

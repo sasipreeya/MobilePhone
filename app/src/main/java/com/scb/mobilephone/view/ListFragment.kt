@@ -20,7 +20,8 @@ import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.presenters.ListInterface
 import com.scb.mobilephone.presenters.ListPresenter
 import com.scb.mobilephone.presenters.ListPresenter.Companion.favoriteItem
-import com.scb.mobilephone.presenters.ListPresenter.Companion.mDataArray
+import com.scb.mobilephone.presenters.ListPresenter.Companion.mDatabaseAdapter
+import com.scb.mobilephone.presenters.ListPresenter.Companion.mThreadManager
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.phone_list.view.*
@@ -29,11 +30,11 @@ import kotlinx.android.synthetic.main.phone_list.view.*
 class ListFragment : Fragment(), ListInterface.ListView {
 
     companion object {
-        @SuppressLint("StaticFieldLeak")
         lateinit var listPresenter: ListInterface.ListPresenter
-        @SuppressLint("StaticFieldLeak")
         lateinit var mAdapter: CustomAdapter
     }
+
+    lateinit var phonesList: ArrayList<PhoneBean>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +59,11 @@ class ListFragment : Fragment(), ListInterface.ListView {
         listPresenter.setupTreadManager()
         listPresenter.setupDatabase(context!!)
         listPresenter.feedPhonesList()
+
+        val task = Runnable {
+            phonesList = mDatabaseAdapter!!.phonesListDao().queryPhonesList()!!.phonesList
+        }
+        mThreadManager.postTask(task)
 
         super.onViewCreated(view, savedInstanceState)
     }
@@ -92,16 +98,16 @@ class ListFragment : Fragment(), ListInterface.ListView {
         }
 
         fun recieveData(data: ArrayList<PhoneBean>) {
-            mDataArray = data
+            phonesList = data
         }
 
         override fun getItemCount(): Int {
-            return mDataArray.count()
+            return phonesList.count()
         }
 
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
-            val item = mDataArray[position]
+            val item = phonesList[position]
             holder.phoneName.text = item.name
             holder.phoneDetail.text = item.description
             holder.phonePrice.text = "Price : $" + item.price

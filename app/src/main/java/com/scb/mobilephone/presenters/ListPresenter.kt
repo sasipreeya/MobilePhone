@@ -1,6 +1,5 @@
 package com.scb.mobilephone.presenters
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.content.IntentFilter
@@ -18,14 +17,12 @@ import retrofit2.Response
 class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter {
 
     companion object {
-        @SuppressLint("StaticFieldLeak")
-        var mDataArray: ArrayList<PhoneBean> = ArrayList()
+        var mDatabaseAdapter: AppDatabase? = null
+        lateinit var mThreadManager: ThreadManager
         var favoriteItem: ArrayList<PhoneBean> = ArrayList()
     }
 
-    var mDatabaseAdapter: AppDatabase? = null
-    lateinit var mThreadManager: ThreadManager
-
+    private var mDataArray: ArrayList<PhoneBean> = ArrayList()
     private var view: ListInterface.ListView = _view
 
     override fun keepInDatabase(phonesList: ArrayList<PhoneBean>) {
@@ -69,7 +66,10 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
     }
 
     override fun getPhonesList() {
-        view.showPhonesList(mDataArray)
+        val task = Runnable {
+            view.showPhonesList(mDatabaseAdapter!!.phonesListDao().queryPhonesList()!!.phonesList)
+        }
+        mThreadManager.postTask(task)
         view.hideLoading()
     }
 

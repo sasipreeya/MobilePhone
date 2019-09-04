@@ -9,7 +9,7 @@ import com.scb.mobilephone.models.PhoneBean
 @Entity(tableName = "phones_list")
 data class PhonesListEntity(
     @PrimaryKey(autoGenerate = true) val id: Int?,
-    val phonesList: ArrayList<PhoneBean>
+    var phonesList: ArrayList<PhoneBean>
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readValue(Int::class.java.classLoader) as? Int,

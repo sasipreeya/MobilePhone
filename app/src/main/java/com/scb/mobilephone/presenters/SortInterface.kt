@@ -8,5 +8,8 @@ interface SortInterface {
 
         fun sortDataList(list: ArrayList<PhoneBean>, sort: String)
 
+        fun updatePhonesList(phonesList: ArrayList<PhoneBean>)
+
+        fun updateFavoritesList(favoritesList: ArrayList<PhoneBean>)
     }
 }
