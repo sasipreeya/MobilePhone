@@ -9,10 +9,10 @@ import com.scb.mobilephone.R
 import com.scb.mobilephone.extensions.PriceHL
 import com.scb.mobilephone.extensions.PriceLH
 import com.scb.mobilephone.extensions.RatingHL
-import com.scb.mobilephone.presenter.ListPresenter.Companion.favoriteItem
-import com.scb.mobilephone.presenter.ListPresenter.Companion.mDataArray
-import com.scb.mobilephone.presenter.SortPresenter
-import com.scb.mobilephone.presenter.SortPresenter.Companion.sortPresenter
+import com.scb.mobilephone.presenters.ListPresenter.Companion.favoriteItem
+import com.scb.mobilephone.presenters.ListPresenter.Companion.mDataArray
+import com.scb.mobilephone.presenters.SortPresenter
+import com.scb.mobilephone.presenters.SortPresenter.Companion.sortPresenter
 import com.scb.mobilephone.view.ui.main.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 

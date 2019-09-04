@@ -17,10 +17,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.scb.mobilephone.R
 import com.scb.mobilephone.models.PhoneBean
-import com.scb.mobilephone.presenter.ListInterface
-import com.scb.mobilephone.presenter.ListPresenter
-import com.scb.mobilephone.presenter.ListPresenter.Companion.favoriteItem
-import com.scb.mobilephone.presenter.ListPresenter.Companion.mDataArray
+import com.scb.mobilephone.presenters.ListInterface
+import com.scb.mobilephone.presenters.ListPresenter
+import com.scb.mobilephone.presenters.ListPresenter.Companion.favoriteItem
+import com.scb.mobilephone.presenters.ListPresenter.Companion.mDataArray
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.phone_list.view.*
@@ -55,9 +55,10 @@ class ListFragment : Fragment(), ListInterface.ListView {
         progressBar.visibility = View.VISIBLE
 
         listPresenter = ListPresenter(this)
+        listPresenter.setupTreadManager()
+        listPresenter.setupDatabase(context!!)
         listPresenter.feedPhonesList()
-        // listPresenter.setupDatabase(context!!)
-        // listPresenter.setupTreadManager()
+
         super.onViewCreated(view, savedInstanceState)
     }
 

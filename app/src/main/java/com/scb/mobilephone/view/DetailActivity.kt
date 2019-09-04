@@ -7,8 +7,8 @@ import com.ouattararomuald.slider.ImageSlider
 import com.ouattararomuald.slider.SliderAdapter
 import com.ouattararomuald.slider.loaders.picasso.PicassoImageLoaderFactory
 import com.scb.mobilephone.R
-import com.scb.mobilephone.presenter.DetailInterface
-import com.scb.mobilephone.presenter.DetailPresenter
+import com.scb.mobilephone.presenters.DetailInterface
+import com.scb.mobilephone.presenters.DetailPresenter
 import kotlinx.android.synthetic.main.activity_detail.*
 
 

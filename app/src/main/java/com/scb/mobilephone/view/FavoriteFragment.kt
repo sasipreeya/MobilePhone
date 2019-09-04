@@ -19,10 +19,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.scb.mobilephone.R
 import com.scb.mobilephone.models.PhoneBean
-import com.scb.mobilephone.presenter.FavoriteInterface
-import com.scb.mobilephone.presenter.FavoritePresenter
-import com.scb.mobilephone.presenter.FavoritePresenter.Companion.favoritesSortList
-import com.scb.mobilephone.presenter.ListPresenter.Companion.favoriteItem
+import com.scb.mobilephone.presenters.FavoriteInterface
+import com.scb.mobilephone.presenters.FavoritePresenter
+import com.scb.mobilephone.presenters.FavoritePresenter.Companion.favoritesSortList
+import com.scb.mobilephone.presenters.ListPresenter.Companion.favoriteItem
 import kotlinx.android.synthetic.main.favorite_list.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*

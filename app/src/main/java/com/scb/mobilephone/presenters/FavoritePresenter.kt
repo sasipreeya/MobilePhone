@@ -1,4 +1,4 @@
-package com.scb.mobilephone.presenter
+package com.scb.mobilephone.presenters
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -10,7 +10,7 @@ import com.scb.mobilephone.extensions.FavoriteItemsFromFavoriteToList
 import com.scb.mobilephone.extensions.FavoriteItemsFromListToFavorite
 import com.scb.mobilephone.extensions.GetFavoriteItems
 import com.scb.mobilephone.models.PhoneBean
-import com.scb.mobilephone.presenter.ListPresenter.Companion.favoriteItem
+import com.scb.mobilephone.presenters.ListPresenter.Companion.favoriteItem
 
 class FavoritePresenter(_view: FavoriteInterface.FavoriteView) : FavoriteInterface.FavoritePresenter {
 

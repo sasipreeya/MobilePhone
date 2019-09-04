@@ -1,4 +1,4 @@
-package com.scb.mobilephone.presenter
+package com.scb.mobilephone.presenters
 
 import android.annotation.SuppressLint
 import com.scb.mobilephone.extensions.PriceHL

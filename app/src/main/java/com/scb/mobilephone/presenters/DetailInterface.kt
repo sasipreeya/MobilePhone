@@ -1,4 +1,4 @@
-package com.scb.mobilephone.presenter
+package com.scb.mobilephone.presenters
 
 interface DetailInterface {
 

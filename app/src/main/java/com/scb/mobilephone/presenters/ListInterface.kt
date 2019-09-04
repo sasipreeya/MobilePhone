@@ -1,4 +1,4 @@
-package com.scb.mobilephone.presenter
+package com.scb.mobilephone.presenters
 
 import android.content.Context
 import android.content.Intent
@@ -16,6 +16,8 @@ interface ListInterface {
     }
 
     interface ListPresenter {
+
+        fun keepInDatabase(phonesList: ArrayList<PhoneBean>)
 
         fun feedPhonesList()
 

@@ -13,7 +13,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:usesCleartextTraffic="true">
         <activity
-                android:screenOrientation="portrait"
                 android:name=".view.DetailActivity"
                 android:theme="@style/AppTheme"
                 android:parentActivityName=".view.MainActivity">

@@ -1,4 +1,4 @@
-package com.scb.mobilephone.presenter
+package com.scb.mobilephone.presenters
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -9,6 +9,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.scb.mobilephone.extensions.*
 import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.models.database.AppDatabase
+import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.models.network.ApiInterface
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,6 +28,22 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
 
     private var view: ListInterface.ListView = _view
 
+    override fun keepInDatabase(phonesList: ArrayList<PhoneBean>) {
+        val task = Runnable {
+            val result = mDatabaseAdapter!!.phonesListDao().queryPhonesList()
+            if (result == null) {
+                // insert
+                mDatabaseAdapter!!.phonesListDao().addPhonesList(PhonesListEntity(1, phonesList))
+                Log.d("database", mDatabaseAdapter!!.phonesListDao().queryPhonesList().toString())
+            } else {
+                // update
+                mDatabaseAdapter!!.phonesListDao().updatePhonesList(PhonesListEntity(1, phonesList))
+                Log.d("database", mDatabaseAdapter!!.phonesListDao().queryPhonesList().toString())
+            }
+        }
+        mThreadManager.postTask(task)
+    }
+
     override fun feedPhonesList() {
         val _call = ApiInterface.getClient().getPhones()
         _call.enqueue(object : Callback<List<PhoneBean>> {
@@ -44,8 +61,9 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
                     mDataArray.addAll((response.body()!!))
                     view.showPhonesList(mDataArray)
                     view.hideLoading()
+                    Log.d("data", mDataArray.toString())
+                    keepInDatabase(mDataArray)
                 }
-
             }
         })
     }
