@@ -26,10 +26,6 @@ import java.util.*
 
 class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
 
-    override fun updateFragment() {
-        favoritePresenter.getFavoritesList(context!!)
-    }
-
     lateinit var favoritePresenter: FavoriteInterface.FavoritePresenter
 
     lateinit var mAdapter: CustomAdapter
@@ -57,7 +53,6 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
             itemTouchHelper.attachToRecyclerView(view.recyclerView)
         }
         favoritePresenter.getFavoritesList(context!!)
-        mAdapter.notifyDataSetChanged()
     }
 
     override fun showLoading() {
@@ -70,11 +65,16 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
 
     override fun showFavoritesList(phonesSortedList: ArrayList<FavoritesEntity>) {
         mAdapter.setData(phonesSortedList)
-        mAdapter.notifyDataSetChanged()
 
         swipeRefresh.setOnRefreshListener {
             favoritePresenter.getFavoritesList(context!!)
+            mAdapter.notifyDataSetChanged()
         }
+    }
+
+    override fun updateFragment() {
+        favoritePresenter.getFavoritesList(context!!)
+        mAdapter.notifyDataSetChanged()
     }
 
     inner class CustomAdapter(val context: Context) :
@@ -99,7 +99,6 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
             favoritePresenter.removeFavoriteItem(mData[position].id)
             mData.removeAt(position)
             notifyItemRemoved(position)
-            mAdapter.notifyDataSetChanged()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {

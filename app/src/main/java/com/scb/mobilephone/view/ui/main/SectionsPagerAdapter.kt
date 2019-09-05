@@ -13,7 +13,7 @@ private val TAB_TITLES = arrayOf(
     R.string.tab_text_2
 )
 
-class SectionsPagerAdapter(private val context: MainActivity, val fragmentManager: FragmentManager) :
+class SectionsPagerAdapter(private val context: MainActivity, private val fragmentManager: FragmentManager) :
     FragmentPagerAdapter(fragmentManager) {
 
     fun updateListFragment() {

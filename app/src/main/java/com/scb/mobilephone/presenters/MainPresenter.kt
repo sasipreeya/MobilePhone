@@ -11,7 +11,6 @@ import com.scb.mobilephone.models.database.AppDatabase
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.presenters.interfaces.MainInterface
-import com.scb.mobilephone.view.ListFragment
 
 
 class MainPresenter : MainInterface.SortPresenter {
