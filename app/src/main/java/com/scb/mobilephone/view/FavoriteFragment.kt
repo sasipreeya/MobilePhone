@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +24,11 @@ import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import java.util.*
 
-class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
+class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
+
+    override fun updateFragment() {
+        favoritePresenter.getFavoritesList(context!!)
+    }
 
     lateinit var favoritePresenter: FavoriteInterface.FavoritePresenter
 
@@ -169,7 +172,6 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
                 listener.onItemDismiss(viewHolder.adapterPosition)
             }
         }
-
     }
 
     interface CustomItemTouchHelperListener {
@@ -177,5 +179,4 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
 
         fun onItemDismiss(position: Int)
     }
-
 }

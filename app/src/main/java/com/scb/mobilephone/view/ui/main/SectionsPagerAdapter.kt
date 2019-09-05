@@ -13,21 +13,32 @@ private val TAB_TITLES = arrayOf(
     R.string.tab_text_2
 )
 
-class SectionsPagerAdapter(private val context: MainActivity, fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class SectionsPagerAdapter(private val context: MainActivity, val fragmentManager: FragmentManager) :
+    FragmentPagerAdapter(fragmentManager) {
 
-    private lateinit var mListFragment: ListFragment
-    private lateinit var mFavoriteFragment: FavoriteFragment
+    fun updateListFragment() {
+        fragmentManager.fragments.forEach {
+            if (it is ListFragment) {
+                it.updateFragment()
+            }
+        }
+    }
+
+    fun updateFavoriteFragment() {
+        fragmentManager.fragments.forEach {
+            if (it is FavoriteFragment) {
+                it.updateFragment()
+            }
+        }
+    }
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            // pass params intent to fragment
             0 -> {
-                mListFragment = ListFragment()
-                mListFragment
+                ListFragment()
             }
             else -> {
-                mFavoriteFragment = FavoriteFragment()
-                mFavoriteFragment
+                FavoriteFragment()
             }
         }
     }

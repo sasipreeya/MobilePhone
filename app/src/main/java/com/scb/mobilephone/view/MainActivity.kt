@@ -23,11 +23,13 @@ class MainActivity : AppCompatActivity() {
     lateinit var phonesList: ArrayList<PhoneBean>
     lateinit var favoritesList: List<FavoritesEntity>
 
+    lateinit var sectionsPagerAdapter: SectionsPagerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
+        sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
         val viewPager: ViewPager = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = this.findViewById(R.id.tabs)
@@ -69,10 +71,10 @@ class MainActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 when (position) {
                     0 -> {
-                        viewPager.adapter!!.notifyDataSetChanged()
+                        sectionsPagerAdapter.updateListFragment()
                     }
                     1 -> {
-                        viewPager.adapter!!.notifyDataSetChanged()
+                        sectionsPagerAdapter.updateFavoriteFragment()
                     }
                 }
             }

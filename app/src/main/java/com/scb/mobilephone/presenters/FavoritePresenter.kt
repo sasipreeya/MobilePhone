@@ -10,9 +10,9 @@ import com.scb.mobilephone.presenters.interfaces.FavoriteInterface
 class FavoritePresenter(_view: FavoriteInterface.FavoriteView) :
     FavoriteInterface.FavoritePresenter {
 
-    var favoritesList: ArrayList<FavoritesEntity> = ArrayList()
-    var mDatabase: AppDatabase? = null
-    lateinit var mThreadManager: ThreadManager
+    private var favoritesList: ArrayList<FavoritesEntity> = ArrayList()
+    private var mDatabase: AppDatabase? = null
+    private lateinit var mThreadManager: ThreadManager
 
     private var view: FavoriteInterface.FavoriteView = _view
 
@@ -49,5 +49,4 @@ class FavoritePresenter(_view: FavoriteInterface.FavoriteView) :
         }
         mThreadManager.postTask(task)
     }
-
 }

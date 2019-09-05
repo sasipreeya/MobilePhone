@@ -17,8 +17,8 @@ import retrofit2.Response
 
 class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter {
 
-    var mDatabase: AppDatabase? = null
-    lateinit var mThreadManager: ThreadManager
+    private var mDatabase: AppDatabase? = null
+    private lateinit var mThreadManager: ThreadManager
 
     private var mDataArray: ArrayList<PhoneBean> = ArrayList()
     private var view: ListInterface.ListView = _view

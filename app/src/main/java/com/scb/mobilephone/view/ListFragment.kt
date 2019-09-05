@@ -11,7 +11,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.cardview.widget.CardView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -25,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.phone_list.view.*
 
 
-class ListFragment : Fragment(), ListInterface.ListView {
+class ListFragment : BaseSortFragment(), ListInterface.ListView {
 
     lateinit var listPresenter: ListInterface.ListPresenter
     lateinit var mAdapter: CustomAdapter
@@ -76,14 +75,22 @@ class ListFragment : Fragment(), ListInterface.ListView {
         mAdapter.notifyDataSetChanged()
 
         swipeRefresh.setOnRefreshListener {
-            val task = Runnable {
-                phonesList = listPresenter.getPhones()
-                favoritesList = listPresenter.getFavorites()
-            }
-            listPresenter.postTask(task)
-            mAdapter.notifyDataSetChanged()
-            hideLoading()
+            refresh()
         }
+    }
+
+    override fun updateFragment() {
+        refresh()
+    }
+
+    private fun refresh() {
+        val task = Runnable {
+            phonesList = listPresenter.getPhones()
+            favoritesList = listPresenter.getFavorites()
+        }
+        listPresenter.postTask(task)
+        mAdapter.notifyDataSetChanged()
+        hideLoading()
     }
 
     inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomHolder>() {
