@@ -1,29 +1,24 @@
 package com.scb.mobilephone.presenters
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.util.Log
 import android.widget.Toast
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.scb.mobilephone.extensions.*
 import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.models.database.AppDatabase
-import com.scb.mobilephone.models.database.entities.FavoritesListEntity
+import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.models.network.ApiInterface
+import com.scb.mobilephone.presenters.interfaces.ListInterface
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter {
 
-    companion object {
-        var mDatabaseAdapter: AppDatabase? = null
-        lateinit var mThreadManager: ThreadManager
-        var favoriteItem: ArrayList<PhoneBean> = ArrayList()
-    }
+    var mDatabase: AppDatabase? = null
+    lateinit var mThreadManager: ThreadManager
 
     private var mDataArray: ArrayList<PhoneBean> = ArrayList()
     private var view: ListInterface.ListView = _view
@@ -55,26 +50,39 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
 
     override fun keepInDatabase(phonesList: ArrayList<PhoneBean>) {
         val task = Runnable {
-            val result = mDatabaseAdapter!!.phonesListDao().queryPhonesList()
+            val result = mDatabase!!.phonesListDao().queryPhonesList()
             if (result == null) {
                 // insert
-                mDatabaseAdapter!!.phonesListDao().addPhonesList(PhonesListEntity(1, phonesList))
-                Log.d("database", mDatabaseAdapter!!.phonesListDao().queryPhonesList().toString())
+                mDatabase!!.phonesListDao().addPhonesList(PhonesListEntity(1, phonesList))
+                Log.d("database", mDatabase!!.phonesListDao().queryPhonesList().toString())
             } else {
                 // update
-                mDatabaseAdapter!!.phonesListDao().updatePhonesList(PhonesListEntity(1, phonesList))
-                Log.d("database", mDatabaseAdapter!!.phonesListDao().queryPhonesList().toString())
+                mDatabase!!.phonesListDao().updatePhonesList(PhonesListEntity(1, phonesList))
+                Log.d("database", mDatabase!!.phonesListDao().queryPhonesList().toString())
             }
         }
         mThreadManager.postTask(task)
     }
 
+    override fun getPhones(): ArrayList<PhoneBean> {
+        return mDatabase?.let {
+            it.phonesListDao().queryPhonesList()?.phonesList
+        } ?: run {
+            arrayListOf<PhoneBean>()
+        }
+    }
+
+    override fun getFavorites(): List<FavoritesEntity> {
+        return mDatabase?.favoritesListDao()?.queryFavoritesList() ?: run {
+            listOf<FavoritesEntity>()
+        }
+    }
+
     override fun getPhonesList() {
         val task = Runnable {
-            view.showPhonesList(mDatabaseAdapter!!.phonesListDao().queryPhonesList()!!.phonesList)
+            view.showPhonesList(mDatabase!!.phonesListDao().queryPhonesList()!!.phonesList)
         }
         mThreadManager.postTask(task)
-        view.hideLoading()
     }
 
     override fun openDetailPage(
@@ -97,7 +105,7 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
     }
 
     override fun setupDatabase(context: Context) {
-        mDatabaseAdapter = AppDatabase.getInstance(context).also {
+        mDatabase = AppDatabase.getInstance(context).also {
             it.openHelper.readableDatabase
         }
     }
@@ -108,15 +116,38 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         }
     }
 
-    override fun updateFavoritesList(favoritesList: ArrayList<PhoneBean>) {
+    override fun postTask(task: Runnable) {
+        mThreadManager.postTask(task)
+    }
+
+    override fun addFavoriteItem(phone: PhoneBean) {
         val task = Runnable {
-            val result = mDatabaseAdapter!!.favoritesListDao().queryFavoritesList()
-            if (result == null) {
-                mDatabaseAdapter!!.favoritesListDao().addFavoritesList(FavoritesListEntity(null, favoritesList))
-            } else {
-                mDatabaseAdapter!!.favoritesListDao().updateFavoritesList(FavoritesListEntity(1, favoritesList))
-            }
-            Log.d("database", mDatabaseAdapter!!.favoritesListDao().queryFavoritesList().toString())
+            mDatabase!!.favoritesListDao()
+                .addFavorite(
+                    FavoritesEntity(
+                        id = phone.id,
+                        brand = phone.brand,
+                        description = phone.description,
+                        name = phone.name,
+                        price = phone.price,
+                        rating = phone.rating,
+                        thumbImageURL = phone.thumbImageURL
+                    )
+                )
+            val list = mDatabase!!.favoritesListDao().queryFavoritesList()
+            Log.d("database", list.toString())
+            Log.d("database", "${list?.size}")
+        }
+        mThreadManager.postTask(task)
+    }
+
+    override fun removeFavoriteItem(id: Int) {
+        val task = Runnable {
+            mDatabase!!.favoritesListDao()
+                .deleteFavorite(id)
+            val list = mDatabase!!.favoritesListDao().queryFavoritesList()
+            Log.d("database", list.toString())
+            Log.d("database", "${list?.size}")
         }
         mThreadManager.postTask(task)
     }

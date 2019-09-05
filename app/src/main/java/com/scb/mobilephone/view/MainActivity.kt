@@ -10,18 +10,18 @@ import com.scb.mobilephone.extensions.PriceHL
 import com.scb.mobilephone.extensions.PriceLH
 import com.scb.mobilephone.extensions.RatingHL
 import com.scb.mobilephone.models.PhoneBean
-import com.scb.mobilephone.presenters.ListPresenter.Companion.mDatabaseAdapter
-import com.scb.mobilephone.presenters.ListPresenter.Companion.mThreadManager
-import com.scb.mobilephone.presenters.SortPresenter
-import com.scb.mobilephone.presenters.SortPresenter.Companion.sortPresenter
+import com.scb.mobilephone.models.database.entities.FavoritesEntity
+import com.scb.mobilephone.presenters.MainPresenter
+import com.scb.mobilephone.presenters.interfaces.MainInterface
 import com.scb.mobilephone.view.ui.main.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var mainPresenter: MainInterface.SortPresenter
     lateinit var phonesList: ArrayList<PhoneBean>
-    lateinit var favoritesList: ArrayList<PhoneBean>
+    lateinit var favoritesList: List<FavoritesEntity>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,30 +33,49 @@ class MainActivity : AppCompatActivity() {
         val tabs: TabLayout = this.findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
 
-        sortPresenter = SortPresenter()
+        mainPresenter = MainPresenter()
+        mainPresenter.setupTreadManager()
+        mainPresenter.setupDatabase(this)
 
         sortBtn.setOnClickListener {
-            // get phones list from database
             val task = Runnable {
-                phonesList = mDatabaseAdapter!!.phonesListDao().queryPhonesList()!!.phonesList
-                favoritesList = mDatabaseAdapter!!.favoritesListDao().queryFavoritesList()!!.favoritesList
+                phonesList = mainPresenter.getPhones()
+                favoritesList = mainPresenter.getFavorites()
             }
-            mThreadManager.postTask(task)
+            mainPresenter.postTask(task)
 
             val listItems = arrayOf(PriceLH, PriceHL, RatingHL)
             val mBuilder = AlertDialog.Builder(this@MainActivity)
             mBuilder.setSingleChoiceItems(listItems, -1) { dialogInterface, i ->
                 val selectedItem = listItems[i]
-                // sort phones list
-                sortPresenter.sortDataList(phonesList, selectedItem)
-                sortPresenter.updatePhonesList(phonesList)
-                // sort favorites list
-                sortPresenter.sortDataList(favoritesList, selectedItem)
-                sortPresenter.updateFavoritesList(favoritesList)
+                mainPresenter.sortPhonesList(phonesList, selectedItem)
+                mainPresenter.sortFavoritesList(favoritesList, selectedItem)
                 dialogInterface.dismiss()
             }
             val mDialog = mBuilder.create()
             mDialog.show()
         }
+
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {}
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                when (position) {
+                    0 -> {
+                        viewPager.adapter!!.notifyDataSetChanged()
+                    }
+                    1 -> {
+                        viewPager.adapter!!.notifyDataSetChanged()
+                    }
+                }
+            }
+        })
     }
 }

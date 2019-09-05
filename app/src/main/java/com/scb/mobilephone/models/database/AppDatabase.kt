@@ -9,10 +9,10 @@ import com.scb.mobilephone.extensions.DatabaseName
 import com.scb.mobilephone.models.database.converters.ArrayListConverter
 import com.scb.mobilephone.models.database.dao.FavoritesListDAO
 import com.scb.mobilephone.models.database.dao.PhonesListDAO
-import com.scb.mobilephone.models.database.entities.FavoritesListEntity
+import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 
-@Database(entities = [PhonesListEntity::class, FavoritesListEntity::class], version = 1, exportSchema = true)
+@Database(entities = [PhonesListEntity::class, FavoritesEntity::class], version = 1, exportSchema = true)
 @TypeConverters(value = [ArrayListConverter::class])
 abstract class AppDatabase : RoomDatabase() {
 

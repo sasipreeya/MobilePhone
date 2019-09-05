@@ -1,36 +1,53 @@
 package com.scb.mobilephone.presenters
 
-import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.scb.mobilephone.extensions.FavoriteItemsFromFavoriteToList
-import com.scb.mobilephone.extensions.FavoriteItemsFromListToFavorite
-import com.scb.mobilephone.extensions.GetFavoriteItems
-import com.scb.mobilephone.models.PhoneBean
-import com.scb.mobilephone.presenters.ListPresenter.Companion.favoriteItem
-import com.scb.mobilephone.presenters.ListPresenter.Companion.mDatabaseAdapter
+import android.util.Log
+import com.scb.mobilephone.extensions.ThreadManager
+import com.scb.mobilephone.models.database.AppDatabase
+import com.scb.mobilephone.models.database.entities.FavoritesEntity
+import com.scb.mobilephone.presenters.interfaces.FavoriteInterface
 
-class FavoritePresenter(_view: FavoriteInterface.FavoriteView) : FavoriteInterface.FavoritePresenter {
+class FavoritePresenter(_view: FavoriteInterface.FavoriteView) :
+    FavoriteInterface.FavoritePresenter {
 
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        var favoritesSortList: ArrayList<PhoneBean> = ArrayList()
-    }
+    var favoritesList: ArrayList<FavoritesEntity> = ArrayList()
+    var mDatabase: AppDatabase? = null
+    lateinit var mThreadManager: ThreadManager
 
     private var view: FavoriteInterface.FavoriteView = _view
 
+    override fun setupDatabase(context: Context) {
+        mDatabase = AppDatabase.getInstance(context).also {
+            it.openHelper.readableDatabase
+        }
+    }
+
+    override fun setupTreadManager() {
+        mThreadManager = ThreadManager("database3").also {
+            it.start()
+        }
+    }
+
     override fun getFavoritesList(context: Context) {
         val task = Runnable {
-            val favoritesList = mDatabaseAdapter!!.favoritesListDao().queryFavoritesList()!!.favoritesList
-            favoritesSortList.clear()
-            favoritesSortList.addAll(favoritesList)
+            val favoritesList = mDatabase!!.favoritesListDao().queryFavoritesList()!!
+            this.favoritesList.clear()
+            this.favoritesList.addAll(favoritesList)
         }
-        ListPresenter.mThreadManager.postTask(task)
-        view.showFavoritesList(favoritesSortList)
+        mThreadManager.postTask(task)
+        view.showFavoritesList(favoritesList)
         view.hideLoading()
+    }
+
+    override fun removeFavoriteItem(id: Int) {
+        val task = Runnable {
+            mDatabase!!.favoritesListDao()
+                .deleteFavorite(id)
+            val list = mDatabase!!.favoritesListDao().queryFavoritesList()
+            Log.d("database", list.toString())
+            Log.d("database", "${list?.size}")
+        }
+        mThreadManager.postTask(task)
     }
 
 }

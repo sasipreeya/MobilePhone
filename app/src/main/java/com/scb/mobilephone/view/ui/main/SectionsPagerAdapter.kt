@@ -3,10 +3,10 @@ package com.scb.mobilephone.view.ui.main
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.scb.mobilephone.R
 import com.scb.mobilephone.view.FavoriteFragment
 import com.scb.mobilephone.view.ListFragment
 import com.scb.mobilephone.view.MainActivity
-import com.scb.mobilephone.R
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,

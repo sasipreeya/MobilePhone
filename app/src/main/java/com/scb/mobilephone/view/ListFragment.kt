@@ -17,11 +17,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.scb.mobilephone.R
 import com.scb.mobilephone.models.PhoneBean
-import com.scb.mobilephone.presenters.ListInterface
+import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.presenters.ListPresenter
-import com.scb.mobilephone.presenters.ListPresenter.Companion.favoriteItem
-import com.scb.mobilephone.presenters.ListPresenter.Companion.mDatabaseAdapter
-import com.scb.mobilephone.presenters.ListPresenter.Companion.mThreadManager
+import com.scb.mobilephone.presenters.interfaces.ListInterface
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.phone_list.view.*
@@ -29,24 +27,25 @@ import kotlinx.android.synthetic.main.phone_list.view.*
 
 class ListFragment : Fragment(), ListInterface.ListView {
 
-    companion object {
-        lateinit var listPresenter: ListInterface.ListPresenter
-        lateinit var mAdapter: CustomAdapter
-    }
+    lateinit var listPresenter: ListInterface.ListPresenter
+    lateinit var mAdapter: CustomAdapter
 
     lateinit var phonesList: ArrayList<PhoneBean>
+    lateinit var favoritesList: List<FavoritesEntity>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val _view = inflater.inflate(R.layout.fragment_list, container, false)
-
-        return _view
+        return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        listPresenter = ListPresenter(this)
+        listPresenter.setupTreadManager()
+        listPresenter.setupDatabase(context!!)
+
         mAdapter = CustomAdapter(context!!)
         view.recyclerView.let {
             it.adapter = mAdapter
@@ -54,18 +53,13 @@ class ListFragment : Fragment(), ListInterface.ListView {
         }
 
         progressBar.visibility = View.VISIBLE
-
-        listPresenter = ListPresenter(this)
-        listPresenter.setupTreadManager()
-        listPresenter.setupDatabase(context!!)
         listPresenter.feedPhonesList(context!!)
 
         val task = Runnable {
-            phonesList = mDatabaseAdapter!!.phonesListDao().queryPhonesList()!!.phonesList
+            phonesList = listPresenter.getPhones()
+            favoritesList = listPresenter.getFavorites()
         }
-        mThreadManager.postTask(task)
-
-        super.onViewCreated(view, savedInstanceState)
+        listPresenter.postTask(task)
     }
 
     override fun showLoading() {
@@ -82,7 +76,13 @@ class ListFragment : Fragment(), ListInterface.ListView {
         mAdapter.notifyDataSetChanged()
 
         swipeRefresh.setOnRefreshListener {
-            listPresenter.getPhonesList()
+            val task = Runnable {
+                phonesList = listPresenter.getPhones()
+                favoritesList = listPresenter.getFavorites()
+            }
+            listPresenter.postTask(task)
+            mAdapter.notifyDataSetChanged()
+            hideLoading()
         }
     }
 
@@ -108,6 +108,7 @@ class ListFragment : Fragment(), ListInterface.ListView {
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
             val item = phonesList[position]
+            val favoriteItem = FavoritesEntity(item.brand, item.description, item.id, item.name, item.price, item.rating, item.thumbImageURL)
             holder.phoneName.text = item.name
             holder.phoneDetail.text = item.description
             holder.phonePrice.text = "Price : $" + item.price
@@ -134,15 +135,13 @@ class ListFragment : Fragment(), ListInterface.ListView {
             holder.favBtn.textOn = null
             holder.favBtn.textOff = null
 
-            holder.favBtn.isChecked = item in favoriteItem
+            holder.favBtn.isChecked = favoritesList.contains(favoriteItem)
 
             holder.favBtn.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    favoriteItem.add(item)
-                    listPresenter.updateFavoritesList(favoriteItem)
+                    listPresenter.addFavoriteItem(item)
                 } else {
-                    favoriteItem.remove(item)
-                    listPresenter.updateFavoritesList(favoriteItem)
+                    listPresenter.removeFavoriteItem(item.id)
                 }
             }
         }

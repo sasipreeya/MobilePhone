@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,11 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.scb.mobilephone.R
-import com.scb.mobilephone.models.PhoneBean
-import com.scb.mobilephone.presenters.FavoriteInterface
+import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.presenters.FavoritePresenter
-import com.scb.mobilephone.presenters.FavoritePresenter.Companion.favoritesSortList
-import com.scb.mobilephone.presenters.ListPresenter.Companion.favoriteItem
+import com.scb.mobilephone.presenters.interfaces.FavoriteInterface
 import kotlinx.android.synthetic.main.favorite_list.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
@@ -30,30 +27,24 @@ import java.util.*
 
 class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
 
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        lateinit var favoritePresenter: FavoriteInterface.FavoritePresenter
-        @SuppressLint("StaticFieldLeak")
-        lateinit var mAdapter: CustomAdapter
-    }
+    lateinit var favoritePresenter: FavoriteInterface.FavoritePresenter
+
+    lateinit var mAdapter: CustomAdapter
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-
-        mAdapter = CustomAdapter(context!!, favoritesSortList)
-
-        val _view = inflater.inflate(R.layout.fragment_favorite, container, false)
-
-        return _view
+        return inflater.inflate(R.layout.fragment_favorite, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         favoritePresenter = FavoritePresenter(this)
-        favoritePresenter.getFavoritesList(context!!)
+        favoritePresenter.setupTreadManager()
+        favoritePresenter.setupDatabase(context!!)
 
-        mAdapter = CustomAdapter(context!!, favoritesSortList)
+        mAdapter = CustomAdapter(context!!)
         view.recyclerView.let {
             it.adapter = mAdapter
             it.layoutManager = LinearLayoutManager(activity)
@@ -62,7 +53,8 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
             val itemTouchHelper = ItemTouchHelper(callback)
             itemTouchHelper.attachToRecyclerView(view.recyclerView)
         }
-        super.onViewCreated(view, savedInstanceState)
+        favoritePresenter.getFavoritesList(context!!)
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun showLoading() {
@@ -73,49 +65,57 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
         swipeRefresh.isRefreshing = false
     }
 
-    override fun showFavoritesList(phonesSortedList: ArrayList<PhoneBean>) {
+    override fun showFavoritesList(phonesSortedList: ArrayList<FavoritesEntity>) {
+        mAdapter.setData(phonesSortedList)
         mAdapter.notifyDataSetChanged()
 
         swipeRefresh.setOnRefreshListener {
             favoritePresenter.getFavoritesList(context!!)
-            mAdapter.notifyDataSetChanged()
         }
     }
 
-    inner class CustomAdapter(val context: Context, private val androidList: ArrayList<PhoneBean>) : RecyclerView.Adapter<CustomAdapter.CustomHolder>(),
+    inner class CustomAdapter(val context: Context) :
+        RecyclerView.Adapter<CustomAdapter.CustomHolder>(),
         CustomItemTouchHelperListener {
+
+        private val mData: ArrayList<FavoritesEntity> = arrayListOf()
+
+        fun setData(list: ArrayList<FavoritesEntity>) {
+            mData.clear()
+            mData.addAll(list)
+            mAdapter.notifyDataSetChanged()
+        }
+
         override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-            Collections.swap(androidList, fromPosition, toPosition)
+            Collections.swap(mData, fromPosition, toPosition)
             notifyItemMoved(fromPosition, toPosition)
             return true
         }
 
         override fun onItemDismiss(position: Int) {
-            androidList.removeAt(position)
-            favoriteItem.removeAt(position)
-            Log.d("favItem", favoriteItem.toString())
-            // favoritePresenter.sendFavoriteItems(context, favoriteItem)
-            ListFragment.mAdapter.notifyDataSetChanged()
+            favoritePresenter.removeFavoriteItem(mData[position].id)
+            mData.removeAt(position)
             notifyItemRemoved(position)
+            mAdapter.notifyDataSetChanged()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {
             return CustomHolder(
-                    LayoutInflater.from(parent.context).inflate(
-                        R.layout.favorite_list,
-                            parent,
-                            false
-                    )
+                LayoutInflater.from(parent.context).inflate(
+                    R.layout.favorite_list,
+                    parent,
+                    false
+                )
             )
         }
 
         override fun getItemCount(): Int {
-            return favoritesSortList.count()
+            return mData.count()
         }
 
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
-            val item = favoritesSortList[position]
+            val item = mData[position]
             holder.phoneName.text = item.name
             holder.phonePrice.text = item.price.toString()
             holder.phoneRating.text = "Rating : " + item.rating
@@ -135,7 +135,7 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
             }
         }
 
-        inner class CustomHolder(view: View): RecyclerView.ViewHolder(view) {
+        inner class CustomHolder(view: View) : RecyclerView.ViewHolder(view) {
             val cardview: CardView = view.cardViewFav
             val phoneImage: ImageView = view.phoneImageFav
             val phoneName: TextView = view.phoneNameFav
@@ -144,8 +144,12 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
         }
     }
 
-    inner class CustomItemTouchHelperCallback(private var listener: CustomItemTouchHelperListener) : ItemTouchHelper.Callback() {
-        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+    inner class CustomItemTouchHelperCallback(private var listener: CustomItemTouchHelperListener) :
+        ItemTouchHelper.Callback() {
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int {
 
             val dragFlags = 0
             val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
@@ -169,7 +173,7 @@ class FavoriteFragment : Fragment(), FavoriteInterface.FavoriteView {
     }
 
     interface CustomItemTouchHelperListener {
-        fun onItemMove(fromPosition: Int, toPosition: Int) : Boolean
+        fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
 
         fun onItemDismiss(position: Int)
     }

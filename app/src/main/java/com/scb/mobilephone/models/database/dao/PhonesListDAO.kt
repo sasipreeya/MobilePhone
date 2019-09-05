@@ -1,6 +1,7 @@
 package com.scb.mobilephone.models.database.dao
 
 import androidx.room.*
+import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 
 @Dao
