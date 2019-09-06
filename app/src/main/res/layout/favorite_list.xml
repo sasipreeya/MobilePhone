@@ -27,7 +27,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:layout_toRightOf="@id/phoneImageFav"
+                    android:layout_toEndOf="@id/phoneImageFav"
                     android:text="Phone 1"
                     android:textSize="20sp" />
 
@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/phoneNameFav"
                     android:layout_margin="8dp"
-                    android:layout_toRightOf="@id/phoneImageFav"
+                    android:layout_toEndOf="@id/phoneImageFav"
                     android:text="Price : $123.123" />
 
             <TextView
@@ -47,7 +47,7 @@
                     android:layout_below="@id/phonePriceFav"
                     android:layout_alignParentBottom="true"
                     android:layout_margin="8dp"
-                    android:layout_toRightOf="@id/phoneImageFav"
+                    android:layout_toEndOf="@id/phoneImageFav"
                     android:paddingTop="30dp"
                     android:text="Rating : 4.9" />
 
