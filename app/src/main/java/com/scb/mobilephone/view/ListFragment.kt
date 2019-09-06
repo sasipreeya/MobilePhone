@@ -36,14 +36,16 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        listPresenter = ListPresenter(this)
+        listPresenter.setupTreadManager()
+        listPresenter.setupDatabase(context!!)
+
         return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        listPresenter = ListPresenter(this)
-        listPresenter.setupTreadManager()
-        listPresenter.setupDatabase(context!!)
 
         mAdapter = CustomAdapter(context!!)
         view.recyclerView.let {

@@ -6,7 +6,6 @@ import android.util.DisplayMetrics
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
-import com.ouattararomuald.slider.ImageSlider
 import com.scb.mobilephone.R
 import com.scb.mobilephone.presenters.DetailPresenter
 import com.scb.mobilephone.presenters.interfaces.DetailInterface
@@ -17,7 +16,7 @@ class DetailActivity : AppCompatActivity(), DetailInterface.DetailView {
 
     private lateinit var detailPresenter: DetailInterface.DetailPresenter
     private lateinit var viewPager: ViewPager
-    private lateinit var detailPagerAapter: DetailPagerAdapter
+    private lateinit var detailPagerAdapter: DetailPagerAdapter
     private var width:Int = 0
     private var height:Int = 0
 
@@ -44,9 +43,9 @@ class DetailActivity : AppCompatActivity(), DetailInterface.DetailView {
     }
 
     override fun showImageDetail(urlList: ArrayList<String>) {
-        detailPagerAapter = DetailPagerAdapter(this, urlList, width, height)
+        detailPagerAdapter = DetailPagerAdapter(this, urlList, width, height)
         val params = LinearLayout.LayoutParams(width, height)
         viewPager.layoutParams = params
-        viewPager.adapter = detailPagerAapter
+        viewPager.adapter = detailPagerAdapter
     }
 }
