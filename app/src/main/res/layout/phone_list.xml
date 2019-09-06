@@ -18,6 +18,7 @@
                     android:id="@+id/phoneImage"
                     android:src="@mipmap/ic_launcher"
                     android:scaleType="centerCrop"
+                    android:contentDescription="phone_image"
                     android:layout_margin="8dp"
                     android:layout_width="100dp"
                     android:layout_height="100dp"/>
@@ -25,7 +26,7 @@
             <TextView
                     android:id="@+id/phoneName"
                     android:text="Phone 1"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:layout_margin="8dp"
                     android:layout_toRightOf="@id/phoneImage"
                     android:layout_width="wrap_content"

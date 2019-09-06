@@ -2,28 +2,39 @@ package com.scb.mobilephone.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
 import com.ouattararomuald.slider.ImageSlider
-import com.ouattararomuald.slider.SliderAdapter
-import com.ouattararomuald.slider.loaders.picasso.PicassoImageLoaderFactory
 import com.scb.mobilephone.R
-import com.scb.mobilephone.presenters.interfaces.DetailInterface
 import com.scb.mobilephone.presenters.DetailPresenter
+import com.scb.mobilephone.presenters.interfaces.DetailInterface
 import kotlinx.android.synthetic.main.activity_detail.*
 
 
 class DetailActivity : AppCompatActivity(), DetailInterface.DetailView {
 
-    lateinit var detailPresenter: DetailInterface.DetailPresenter
-    private lateinit var imageSlider: ImageSlider
+    private lateinit var detailPresenter: DetailInterface.DetailPresenter
+    private lateinit var viewPager: ViewPager
+    private lateinit var detailPagerAapter: DetailPagerAdapter
+    private var width:Int = 0
+    private var height:Int = 0
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
+        viewPager = findViewById(R.id.imageViewPager)
+
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        width = displayMetrics.widthPixels
+        height = (displayMetrics.heightPixels * 35) / 100
+
         detailPresenter = DetailPresenter(this)
-        detailPresenter.feedDatailData(intent.getIntExtra("id", 0))
+        detailPresenter.feedDetailData(intent.getIntExtra("id", 0))
 
         phoneName.text = intent.getStringExtra("name")
         phoneBrand.text = intent.getStringExtra("brand")
@@ -33,11 +44,9 @@ class DetailActivity : AppCompatActivity(), DetailInterface.DetailView {
     }
 
     override fun showImageDetail(urlList: ArrayList<String>) {
-        imageSlider = findViewById(R.id.phoneImage)
-        imageSlider.adapter = SliderAdapter(
-            applicationContext,
-            PicassoImageLoaderFactory(),
-            imageUrls = urlList
-        )
+        detailPagerAapter = DetailPagerAdapter(this, urlList, width, height)
+        val params = LinearLayout.LayoutParams(width, height)
+        viewPager.layoutParams = params
+        viewPager.adapter = detailPagerAapter
     }
 }

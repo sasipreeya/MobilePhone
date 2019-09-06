@@ -22,11 +22,11 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
 
         private var INSTANCE: AppDatabase? = null
-        private val LOCK_INMEM = Any()
+        private val LOCK = Any()
 
         fun getInstance(context: Context): AppDatabase {
             if (INSTANCE == null) {
-                synchronized(LOCK_INMEM) {
+                synchronized(LOCK) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, DatabaseName)
                         .fallbackToDestructiveMigration()
                         .build()

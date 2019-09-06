@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.phone_list.view.*
 class ListFragment : BaseSortFragment(), ListInterface.ListView {
 
     lateinit var listPresenter: ListInterface.ListPresenter
-    lateinit var mAdapter: CustomAdapter
+    private lateinit var mAdapter: CustomAdapter
 
     lateinit var phonesList: ArrayList<PhoneBean>
     lateinit var favoritesList: List<FavoritesEntity>
@@ -71,7 +71,6 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
     }
 
     override fun showPhonesList(phonesSortedList: ArrayList<PhoneBean>) {
-        CustomAdapter(context!!).recieveData(phonesSortedList)
         mAdapter.notifyDataSetChanged()
 
         swipeRefresh.setOnRefreshListener {
@@ -104,10 +103,6 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
             )
         }
 
-        fun recieveData(data: ArrayList<PhoneBean>) {
-            phonesList = data
-        }
-
         override fun getItemCount(): Int {
             return phonesList.count()
         }
@@ -115,7 +110,7 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
             val item = phonesList[position]
-            val favoriteItem = FavoritesEntity(item.brand, item.description, item.id, item.name, item.price, item.rating, item.thumbImageURL)
+            val favoriteItem = FavoritesEntity(item.id, item.description, item.brand, item.name, item.price, item.rating, item.thumbImageURL)
             holder.phoneName.text = item.name
             holder.phoneDetail.text = item.description
             holder.phonePrice.text = "Price : $" + item.price
@@ -123,7 +118,7 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
 
             Glide.with(context).load(item.thumbImageURL).into(holder.phoneImage)
 
-            holder.cardview.setOnClickListener {
+            holder.cardView.setOnClickListener {
                 val intent = Intent(activity, DetailActivity::class.java)
                 listPresenter.openDetailPage(
                     intent,
@@ -155,7 +150,7 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
     }
 
     inner class CustomHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val cardview: CardView = view.cardView
+        val cardView: CardView = view.cardView
         val phoneImage: ImageView = view.phoneImage
         val phoneName: TextView = view.phoneName
         val phoneDetail: TextView = view.phoneDetail

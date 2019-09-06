@@ -24,8 +24,9 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
     private var view: ListInterface.ListView = _view
 
     override fun feedPhonesList(context: Context) {
-        val _call = ApiInterface.getClient().getPhones()
-        _call.enqueue(object : Callback<List<PhoneBean>> {
+        val call = ApiInterface.getClient().getPhones()
+
+        call.enqueue(object : Callback<List<PhoneBean>> {
             override fun onFailure(call: Call<List<PhoneBean>>, t: Throwable) {
                 Toast.makeText(context, "Fail to get data from API", Toast.LENGTH_LONG).show()
                 Log.d("error", t.message.toString())

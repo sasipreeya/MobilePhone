@@ -15,8 +15,8 @@ import com.scb.mobilephone.presenters.interfaces.MainInterface
 
 class MainPresenter : MainInterface.SortPresenter {
 
-    var mDatabase: AppDatabase? = null
-    lateinit var mThreadManager: ThreadManager
+    private var mDatabase: AppDatabase? = null
+    private lateinit var mThreadManager: ThreadManager
 
     private var sortedList: ArrayList<PhoneBean> = ArrayList()
 

@@ -1,6 +1,7 @@
 package com.scb.mobilephone.presenters
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import com.scb.mobilephone.extensions.ThreadManager
 import com.scb.mobilephone.models.database.AppDatabase
@@ -48,5 +49,24 @@ class FavoritePresenter(_view: FavoriteInterface.FavoriteView) :
             Log.d("database", "${list?.size}")
         }
         mThreadManager.postTask(task)
+    }
+
+    override fun openDetailPage(
+        intent: Intent,
+        thumbImageURL: String,
+        name: String,
+        brand: String,
+        description: String,
+        id: Int,
+        rating: Double,
+        price: Double
+    ) {
+        intent.putExtra("image", thumbImageURL)
+        intent.putExtra("name", name)
+        intent.putExtra("brand", brand)
+        intent.putExtra("detail", description)
+        intent.putExtra("id", id)
+        intent.putExtra("rating", rating)
+        intent.putExtra("price", price)
     }
 }

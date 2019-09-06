@@ -19,9 +19,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var mainPresenter: MainInterface.SortPresenter
-    lateinit var phonesList: ArrayList<PhoneBean>
-    lateinit var favoritesList: List<FavoritesEntity>
+    private lateinit var mainPresenter: MainInterface.SortPresenter
+    private lateinit var phonesList: ArrayList<PhoneBean>
+    private lateinit var favoritesList: List<FavoritesEntity>
 
     lateinit var sectionsPagerAdapter: SectionsPagerAdapter
 

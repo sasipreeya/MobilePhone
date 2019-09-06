@@ -24,12 +24,12 @@ class DetailPresenter(_view : DetailInterface.DetailView): DetailInterface.Detai
         )
     }
 
-    override fun feedDatailData(id: Int) {
+    override fun feedDetailData(id: Int) {
         photoDetailURL = "api/mobiles/${id}/images/"
 
-        val _call = ApiInterface.getClient().getPhotos(photoDetailURL)
+        val call = ApiInterface.getClient().getPhotos(photoDetailURL)
 
-        _call.enqueue(object : Callback<List<PhotoBean>> {
+        call.enqueue(object : Callback<List<PhotoBean>> {
             override fun onFailure(call: Call<List<PhotoBean>>, t: Throwable) {
                 Log.d("error", t.message.toString())
             }

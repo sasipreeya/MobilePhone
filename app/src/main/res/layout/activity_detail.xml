@@ -9,22 +9,29 @@
 
     <RelativeLayout
             android:layout_gravity="center"
-            android:gravity="center"
+            android:orientation="horizontal"
             android:layout_width="200dp"
-            android:layout_height="300dp">
+            android:layout_height="wrap_content">
 
-        <com.ouattararomuald.slider.ImageSlider
-                android:id="@+id/phoneImage"
-                android:src="@mipmap/ic_launcher"
-                android:layout_centerInParent="true"
-                android:layout_margin="8dp"
+        <LinearLayout
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:layout_width="200dp"
-                android:layout_height="300dp"/>
+                android:layout_height="300dp"
+                android:orientation="vertical">
+
+            <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/imageViewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+            </androidx.viewpager.widget.ViewPager>
+
+        </LinearLayout>
 
         <TextView
                 android:id="@+id/phoneRating"
                 android:text="Rating 4.9"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -32,7 +39,7 @@
         <TextView
                 android:id="@+id/phonePrice"
                 android:text="Price 123"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -47,7 +54,7 @@
         <TextView
                 android:id="@+id/phoneName"
                 android:text="Phone Name"
-                android:textSize="24dp"
+                android:textSize="24sp"
                 android:layout_margin="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -55,7 +62,7 @@
         <TextView
                 android:id="@+id/phoneBrand"
                 android:text="Phone Brand"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:layout_margin="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -66,7 +73,7 @@
     <TextView
             android:id="@+id/phoneDetail"
             android:text="Phone Detail"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:layout_margin="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

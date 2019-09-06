@@ -52,6 +52,7 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
             val itemTouchHelper = ItemTouchHelper(callback)
             itemTouchHelper.attachToRecyclerView(view.recyclerView)
         }
+
         favoritePresenter.getFavoritesList(context!!)
     }
 
@@ -67,8 +68,7 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
         mAdapter.setData(phonesSortedList)
 
         swipeRefresh.setOnRefreshListener {
-            favoritePresenter.getFavoritesList(context!!)
-            mAdapter.notifyDataSetChanged()
+            updateFragment()
         }
     }
 
@@ -124,21 +124,24 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
 
             Glide.with(context).load(item.thumbImageURL).into(holder.phoneImage)
 
-            holder.cardview.setOnClickListener {
+            holder.cardView.setOnClickListener {
                 val intent = Intent(activity, DetailActivity::class.java)
-                intent.putExtra("image", item.thumbImageURL)
-                intent.putExtra("name", item.name)
-                intent.putExtra("brand", item.brand)
-                intent.putExtra("detail", item.description)
-                intent.putExtra("id", item.id)
-                intent.putExtra("rating", item.rating)
-                intent.putExtra("price", item.price)
+                favoritePresenter.openDetailPage(
+                    intent,
+                    item.thumbImageURL,
+                    item.name,
+                    item.brand,
+                    item.description,
+                    item.id,
+                    item.rating,
+                    item.price
+                )
                 startActivity(intent)
             }
         }
 
         inner class CustomHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val cardview: CardView = view.cardViewFav
+            val cardView: CardView = view.cardViewFav
             val phoneImage: ImageView = view.phoneImageFav
             val phoneName: TextView = view.phoneNameFav
             val phonePrice: TextView = view.phonePriceFav

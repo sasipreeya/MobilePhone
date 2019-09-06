@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 data class FavoritesEntity(
 
     @PrimaryKey
-    val brand: String,
-    val description: String,
     val id: Int,
+    val description: String,
+    val brand: String,
     val name: String,
     val price: Double,
     val rating: Double,

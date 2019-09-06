@@ -9,7 +9,7 @@ interface DetailInterface {
 
     interface DetailPresenter {
 
-        fun feedDatailData(id: Int)
+        fun feedDetailData(id: Int)
     }
 
 }
