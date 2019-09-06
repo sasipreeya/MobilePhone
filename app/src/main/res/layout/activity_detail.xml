@@ -30,7 +30,6 @@
 
         <TextView
                 android:id="@+id/phoneRating"
-                android:text="Rating 4.9"
                 android:textSize="16sp"
                 android:layout_alignParentStart="true"
                 android:layout_width="wrap_content"
@@ -38,7 +37,6 @@
 
         <TextView
                 android:id="@+id/phonePrice"
-                android:text="Price 123"
                 android:textSize="16sp"
                 android:layout_alignParentEnd="true"
                 android:layout_width="wrap_content"
@@ -53,7 +51,6 @@
 
         <TextView
                 android:id="@+id/phoneName"
-                android:text="Phone Name"
                 android:textSize="24sp"
                 android:layout_margin="8dp"
                 android:layout_width="wrap_content"
@@ -61,7 +58,6 @@
 
         <TextView
                 android:id="@+id/phoneBrand"
-                android:text="Phone Brand"
                 android:textSize="16sp"
                 android:layout_margin="8dp"
                 android:layout_width="wrap_content"
@@ -72,7 +68,6 @@
 
     <TextView
             android:id="@+id/phoneDetail"
-            android:text="Phone Detail"
             android:textSize="16sp"
             android:layout_margin="8dp"
             android:layout_width="match_parent"

@@ -28,7 +28,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_toEndOf="@id/phoneImageFav"
-                    android:text="Phone 1"
                     android:textSize="20sp" />
 
             <TextView
@@ -37,8 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/phoneNameFav"
                     android:layout_margin="8dp"
-                    android:layout_toEndOf="@id/phoneImageFav"
-                    android:text="Price : $123.123" />
+                    android:layout_toEndOf="@id/phoneImageFav" />
 
             <TextView
                     android:id="@+id/phoneRatingFav"
@@ -48,8 +46,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_margin="8dp"
                     android:layout_toEndOf="@id/phoneImageFav"
-                    android:paddingTop="30dp"
-                    android:text="Rating : 4.9" />
+                    android:paddingTop="30dp" />
 
         </RelativeLayout>
 

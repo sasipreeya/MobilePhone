@@ -25,7 +25,6 @@
 
             <TextView
                     android:id="@+id/phoneName"
-                    android:text="Phone 1"
                     android:textSize="20sp"
                     android:layout_margin="8dp"
                     android:layout_toEndOf="@id/phoneImage"
@@ -44,7 +43,6 @@
             <TextView
                     android:id="@+id/phoneDetail"
                     android:lines="2"
-                    android:text="sample phone detail"
                     android:layout_margin="8dp"
                     android:layout_toEndOf="@id/phoneImage"
                     android:layout_below="@id/phoneName"
@@ -53,7 +51,6 @@
 
             <TextView
                     android:id="@+id/phonePrice"
-                    android:text="Price : $123.123"
                     android:layout_margin="8dp"
                     android:layout_toEndOf="@id/phoneImage"
                     android:layout_below="@id/phoneDetail"
@@ -62,7 +59,6 @@
 
             <TextView
                     android:id="@+id/phoneRating"
-                    android:text="Rating : 4.9"
                     android:layout_margin="8dp"
                     android:paddingStart="80dp"
                     android:layout_below="@id/phoneDetail"
