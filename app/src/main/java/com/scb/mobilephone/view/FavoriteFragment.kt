@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.scb.mobilephone.R
+import com.scb.mobilephone.extensions.ThreadManager
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.presenters.FavoritePresenter
 import com.scb.mobilephone.presenters.interfaces.FavoriteInterface
@@ -23,7 +24,6 @@ import kotlinx.android.synthetic.main.favorite_list.view.*
 import kotlinx.android.synthetic.main.fragment_favorite.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
 
@@ -34,14 +34,16 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        favoritePresenter = FavoritePresenter(this)
+        favoritePresenter.setupTreadManager()
+        favoritePresenter.setupDatabase(context!!)
+
         return inflater.inflate(R.layout.fragment_favorite, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        favoritePresenter = FavoritePresenter(this)
-        favoritePresenter.setupTreadManager()
-        favoritePresenter.setupDatabase(context!!)
 
         mAdapter = CustomAdapter(context!!)
         view.recyclerView.let {
@@ -65,6 +67,7 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
     }
 
     override fun showFavoritesList(favoritesSortedList: ArrayList<FavoritesEntity>) {
+        mAdapter.notifyDataSetChanged()
         mAdapter.setData(favoritesSortedList)
 
         swipeRefresh.setOnRefreshListener {

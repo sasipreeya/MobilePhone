@@ -2,12 +2,10 @@ package com.scb.mobilephone.presenters
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.scb.mobilephone.extensions.ThreadManager
 import com.scb.mobilephone.models.database.AppDatabase
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.presenters.interfaces.FavoriteInterface
-import com.scb.mobilephone.view.FavoriteFragment
 
 class FavoritePresenter(_view: FavoriteInterface.FavoriteView) :
     FavoriteInterface.FavoritePresenter {
@@ -28,6 +26,10 @@ class FavoritePresenter(_view: FavoriteInterface.FavoriteView) :
         mThreadManager = ThreadManager("database3").also {
             it.start()
         }
+    }
+
+    override fun postTask(task: Runnable) {
+        mThreadManager.postTask(task)
     }
 
     override fun getFavoritesList(context: Context) {

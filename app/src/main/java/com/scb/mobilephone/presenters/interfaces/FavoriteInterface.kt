@@ -21,6 +21,8 @@ interface FavoriteInterface {
 
         fun setupTreadManager()
 
+        fun postTask(task: Runnable)
+
         fun getFavoritesList(context: Context)
 
         fun removeFavoriteItem(id: Int)
