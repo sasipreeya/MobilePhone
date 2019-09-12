@@ -44,6 +44,7 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
                     view.hideLoading()
                     Log.d("data", mDataArray.toString())
                     keepInDatabase(mDataArray)
+                    view.showPhonesList(mDataArray)
                 }
             }
         })

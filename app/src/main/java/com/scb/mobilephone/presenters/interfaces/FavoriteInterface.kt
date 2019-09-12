@@ -12,7 +12,7 @@ interface FavoriteInterface {
 
         fun hideLoading()
 
-        fun showFavoritesList(phonesSortedList: ArrayList<FavoritesEntity>)
+        fun showFavoritesList(favoritesSortedList: ArrayList<FavoritesEntity>)
     }
 
     interface FavoritePresenter {

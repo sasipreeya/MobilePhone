@@ -19,6 +19,7 @@ class MainPresenter : MainInterface.SortPresenter {
     private lateinit var mThreadManager: ThreadManager
 
     private var sortedList: ArrayList<PhoneBean> = ArrayList()
+    private lateinit var sortedFavoritesList: List<FavoritesEntity>
 
     override fun sortPhonesList(list: ArrayList<PhoneBean>, sort: String) {
         sortedList.clear()
@@ -53,13 +54,17 @@ class MainPresenter : MainInterface.SortPresenter {
     override fun sortFavoritesList(list: List<FavoritesEntity>, sort: String) {
         when (sort) {
             PriceLH -> {
-                updateFavoritesList(list.sortedBy { it.price })
+                sortedFavoritesList = list.sortedBy { it.price }
+                updateFavoritesList(sortedFavoritesList)
             }
             PriceHL -> {
-                updateFavoritesList(list.sortedByDescending { it.price })
+                sortedFavoritesList = list.sortedByDescending { it.price }
+                updateFavoritesList(sortedFavoritesList)
+                Log.d("update", sortedFavoritesList.toString())
             }
             RatingHL -> {
-                updateFavoritesList(list.sortedByDescending { it.rating })
+                sortedFavoritesList = list.sortedByDescending { it.rating }
+                updateFavoritesList(sortedFavoritesList)
             }
         }
     }
@@ -77,9 +82,7 @@ class MainPresenter : MainInterface.SortPresenter {
     }
 
     override fun getFavorites(): List<FavoritesEntity> {
-        return mDatabase?.let {
-            it.favoritesListDao().queryFavoritesList()
-        } ?: run {
+        return mDatabase?.favoritesListDao()?.queryFavoritesList() ?: run {
             arrayListOf<FavoritesEntity>()
         }
     }

@@ -7,6 +7,7 @@ import com.scb.mobilephone.extensions.ThreadManager
 import com.scb.mobilephone.models.database.AppDatabase
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.presenters.interfaces.FavoriteInterface
+import com.scb.mobilephone.view.FavoriteFragment
 
 class FavoritePresenter(_view: FavoriteInterface.FavoriteView) :
     FavoriteInterface.FavoritePresenter {

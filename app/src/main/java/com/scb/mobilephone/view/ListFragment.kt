@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.phone_list.view.*
 class ListFragment : BaseSortFragment(), ListInterface.ListView {
 
     lateinit var listPresenter: ListInterface.ListPresenter
-    private lateinit var mAdapter: CustomAdapter
+    lateinit var mAdapter: CustomAdapter
 
     lateinit var phonesList: ArrayList<PhoneBean>
     lateinit var favoritesList: List<FavoritesEntity>
@@ -48,7 +48,7 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
         super.onViewCreated(view, savedInstanceState)
 
         mAdapter = CustomAdapter(context!!)
-        view.recyclerView.let {
+        view.listRecyclerView.let {
             it.adapter = mAdapter
             it.layoutManager = LinearLayoutManager(activity)
         }
@@ -73,6 +73,7 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
     }
 
     override fun showPhonesList(phonesSortedList: ArrayList<PhoneBean>) {
+        phonesList = phonesSortedList
         mAdapter.notifyDataSetChanged()
 
         swipeRefresh.setOnRefreshListener {

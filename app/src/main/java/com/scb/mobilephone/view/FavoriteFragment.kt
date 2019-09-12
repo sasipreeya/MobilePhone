@@ -20,14 +20,14 @@ import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.presenters.FavoritePresenter
 import com.scb.mobilephone.presenters.interfaces.FavoriteInterface
 import kotlinx.android.synthetic.main.favorite_list.view.*
+import kotlinx.android.synthetic.main.fragment_favorite.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
-import kotlinx.android.synthetic.main.fragment_list.view.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
 
     lateinit var favoritePresenter: FavoriteInterface.FavoritePresenter
-
     lateinit var mAdapter: CustomAdapter
 
     override fun onCreateView(
@@ -64,8 +64,8 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
         swipeRefresh.isRefreshing = false
     }
 
-    override fun showFavoritesList(phonesSortedList: ArrayList<FavoritesEntity>) {
-        mAdapter.setData(phonesSortedList)
+    override fun showFavoritesList(favoritesSortedList: ArrayList<FavoritesEntity>) {
+        mAdapter.setData(favoritesSortedList)
 
         swipeRefresh.setOnRefreshListener {
             updateFragment()
@@ -99,6 +99,7 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
             favoritePresenter.removeFavoriteItem(mData[position].id)
             mData.removeAt(position)
             notifyItemRemoved(position)
+            mAdapter.notifyDataSetChanged()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {
