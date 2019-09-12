@@ -97,6 +97,7 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
 
         override fun onItemDismiss(position: Int) {
             favoritePresenter.removeFavoriteItem(mData[position].id)
+            favoritePresenter.getFavoritesList(context)
             mData.removeAt(position)
             notifyItemRemoved(position)
             mAdapter.notifyDataSetChanged()

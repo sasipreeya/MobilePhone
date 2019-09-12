@@ -45,9 +45,6 @@ class FavoritePresenter(_view: FavoriteInterface.FavoriteView) :
         val task = Runnable {
             mDatabase!!.favoritesListDao()
                 .deleteFavorite(id)
-            val list = mDatabase!!.favoritesListDao().queryFavoritesList()
-            Log.d("database", list.toString())
-            Log.d("database", "${list?.size}")
         }
         mThreadManager.postTask(task)
     }
