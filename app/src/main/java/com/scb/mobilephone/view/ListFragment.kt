@@ -73,6 +73,7 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
 
     override fun showPhonesList(phonesSortedList: List<PhonesListEntity>?) {
         phonesList = phonesSortedList!!
+        mAdapter.setData(phonesList)
         mAdapter.notifyDataSetChanged()
 
         swipeRefresh.setOnRefreshListener {
@@ -90,12 +91,21 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
             favoritesList = listPresenter.getFavorites()
         }
         listPresenter.postTask(task)
+        mAdapter.setData(phonesList)
         mAdapter.notifyDataSetChanged()
         showPhonesList(phonesList)
         hideLoading()
     }
 
     inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomHolder>() {
+
+        private var mData: List<PhonesListEntity> = arrayListOf()
+
+        fun setData(list: List<PhonesListEntity>) {
+            mData = list
+            mAdapter.notifyDataSetChanged()
+        }
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {
             return CustomHolder(
                 LayoutInflater.from(parent.context).inflate(
@@ -107,12 +117,12 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
         }
 
         override fun getItemCount(): Int {
-            return phonesList.count()
+            return mData.count()
         }
 
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
-            val item = phonesList[position]
+            val item = mData[position]
             val favoriteItem = FavoritesEntity(
                 item.id,
                 item.description,
