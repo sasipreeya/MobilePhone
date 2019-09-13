@@ -51,8 +51,7 @@ class MainActivity : AppCompatActivity() {
             mBuilder.setSingleChoiceItems(listItems, -1) { dialogInterface, i ->
                 val selectedItem = listItems[i]
                 mainPresenter.sortList(phonesList, favoritesList, selectedItem)
-                sectionsPagerAdapter.updateListFragment()
-                sectionsPagerAdapter.updateFavoriteFragment()
+                // sectionsPagerAdapter.getSortType(selectedItem)
                 dialogInterface.dismiss()
             }
             val mDialog = mBuilder.create()

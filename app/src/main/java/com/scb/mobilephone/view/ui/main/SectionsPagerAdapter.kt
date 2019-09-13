@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.scb.mobilephone.R
+import com.scb.mobilephone.presenters.SortInterface
 import com.scb.mobilephone.view.FavoriteFragment
 import com.scb.mobilephone.view.ListFragment
 import com.scb.mobilephone.view.MainActivity
@@ -15,6 +16,15 @@ private val TAB_TITLES = arrayOf(
 
 class SectionsPagerAdapter(private val context: MainActivity, private val fragmentManager: FragmentManager) :
     FragmentPagerAdapter(fragmentManager) {
+
+    fun getSortType(sortType: String) {
+        val fragments = fragmentManager.fragments
+        fragments.forEach {
+            if (it is SortInterface.SortToView) {
+                it.getSortType(sortType)
+            }
+        }
+    }
 
     fun updateListFragment() {
         fragmentManager.fragments.forEach {
