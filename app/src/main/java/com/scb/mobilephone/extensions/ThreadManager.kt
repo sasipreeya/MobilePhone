@@ -16,6 +16,7 @@ class ThreadManager(threadName: String) : HandlerThread(threadName) {
     }
 
     fun postTask(task: Runnable) {
+        mWorkerHandler = Handler(looper)
         mWorkerHandler.post(task)
     }
 
