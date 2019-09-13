@@ -13,7 +13,7 @@ class DetailPresenter(_view : DetailInterface.DetailView): DetailInterface.Detai
 
     private var view: DetailInterface.DetailView = _view
     private var mDetailArray: ArrayList<PhotoBean> = ArrayList()
-    lateinit var photoDetailURL: String
+    private lateinit var photoDetailURL: String
 
     companion object {
         @SuppressLint("StaticFieldLeak")

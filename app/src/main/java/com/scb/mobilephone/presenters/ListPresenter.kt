@@ -4,8 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import com.scb.mobilephone.extensions.*
-import com.scb.mobilephone.models.PhoneBean
+import com.scb.mobilephone.extensions.ThreadManager
 import com.scb.mobilephone.models.database.AppDatabase
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
@@ -20,26 +19,26 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
     private var mDatabase: AppDatabase? = null
     private lateinit var mThreadManager: ThreadManager
 
-    private var mDataArray: ArrayList<PhoneBean> = ArrayList()
+    private var mDataArray: List<PhonesListEntity> = listOf()
     private var view: ListInterface.ListView = _view
 
     override fun feedPhonesList(context: Context) {
         val call = ApiInterface.getClient().getPhones()
 
-        call.enqueue(object : Callback<List<PhoneBean>> {
-            override fun onFailure(call: Call<List<PhoneBean>>, t: Throwable) {
+        call.enqueue(object : Callback<List<PhonesListEntity>> {
+            override fun onFailure(call: Call<List<PhonesListEntity>>, t: Throwable) {
                 Toast.makeText(context, "Fail to get data from API", Toast.LENGTH_LONG).show()
                 Log.d("error", t.message.toString())
             }
 
             override fun onResponse(
-                call: Call<List<PhoneBean>>,
-                response: Response<List<PhoneBean>>
+                call: Call<List<PhonesListEntity>>,
+                response: Response<List<PhonesListEntity>>
             ) {
                 Log.d("response", response.body().toString())
                 if (response.isSuccessful) {
-                    mDataArray.clear()
-                    mDataArray.addAll((response.body()!!))
+                    val responseAPI = response.body()
+                    mDataArray = responseAPI!!
                     view.showPhonesList(mDataArray)
                     view.hideLoading()
                     Log.d("data", mDataArray.toString())
@@ -50,27 +49,23 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         })
     }
 
-    override fun keepInDatabase(phonesList: ArrayList<PhoneBean>) {
+    override fun keepInDatabase(phonesList: List<PhonesListEntity>) {
         val task = Runnable {
             val result = mDatabase!!.phonesListDao().queryPhonesList()
-            if (result == null) {
+            if (result!!.isEmpty()) {
                 // insert
-                mDatabase!!.phonesListDao().addPhonesList(PhonesListEntity(1, phonesList))
-                Log.d("database", mDatabase!!.phonesListDao().queryPhonesList().toString())
-            } else {
-                // update
-                mDatabase!!.phonesListDao().updatePhonesList(PhonesListEntity(1, phonesList))
-                Log.d("database", mDatabase!!.phonesListDao().queryPhonesList().toString())
+                for (i in phonesList.indices) {
+                    mDatabase!!.phonesListDao().addPhonesList(phonesList[i])
+                }
             }
+            Log.d("database", result.toString())
         }
         mThreadManager.postTask(task)
     }
 
-    override fun getPhones(): ArrayList<PhoneBean> {
-        return mDatabase?.let {
-            it.phonesListDao().queryPhonesList()?.phonesList
-        } ?: run {
-            arrayListOf<PhoneBean>()
+    override fun getPhones(): List<PhonesListEntity> {
+        return mDatabase?.phonesListDao()?.queryPhonesList() ?: run {
+            listOf<PhonesListEntity>()
         }
     }
 
@@ -82,7 +77,7 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
 
     override fun getPhonesList() {
         val task = Runnable {
-            view.showPhonesList(mDatabase!!.phonesListDao().queryPhonesList()!!.phonesList)
+            view.showPhonesList(mDatabase!!.phonesListDao().queryPhonesList())
         }
         mThreadManager.postTask(task)
     }
@@ -122,7 +117,7 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         mThreadManager.postTask(task)
     }
 
-    override fun addFavoriteItem(phone: PhoneBean) {
+    override fun addFavoriteItem(phone: PhonesListEntity) {
         val task = Runnable {
             mDatabase!!.favoritesListDao()
                 .addFavorite(
@@ -136,9 +131,6 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
                         thumbImageURL = phone.thumbImageURL
                     )
                 )
-            val list = mDatabase!!.favoritesListDao().queryFavoritesList()
-            Log.d("database", list.toString())
-            Log.d("database", "${list?.size}")
         }
         mThreadManager.postTask(task)
     }
@@ -147,9 +139,6 @@ class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter
         val task = Runnable {
             mDatabase!!.favoritesListDao()
                 .deleteFavorite(id)
-            val list = mDatabase!!.favoritesListDao().queryFavoritesList()
-            Log.d("database", list.toString())
-            Log.d("database", "${list?.size}")
         }
         mThreadManager.postTask(task)
     }

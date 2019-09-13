@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.scb.mobilephone.R
-import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
+import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.presenters.ListPresenter
 import com.scb.mobilephone.presenters.interfaces.ListInterface
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -28,7 +28,7 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
 
     lateinit var listPresenter: ListInterface.ListPresenter
     private lateinit var mAdapter: CustomAdapter
-    lateinit var phonesList: ArrayList<PhoneBean>
+    lateinit var phonesList: List<PhonesListEntity>
     lateinit var favoritesList: List<FavoritesEntity>
 
     override fun onCreateView(
@@ -71,8 +71,8 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
         swipeRefresh.isRefreshing = false
     }
 
-    override fun showPhonesList(phonesSortedList: ArrayList<PhoneBean>) {
-        phonesList = phonesSortedList
+    override fun showPhonesList(phonesSortedList: List<PhonesListEntity>?) {
+        phonesList = phonesSortedList!!
         mAdapter.notifyDataSetChanged()
 
         swipeRefresh.setOnRefreshListener {

@@ -11,6 +11,7 @@ import com.scb.mobilephone.extensions.PriceLH
 import com.scb.mobilephone.extensions.RatingHL
 import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
+import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.presenters.MainPresenter
 import com.scb.mobilephone.presenters.interfaces.MainInterface
 import com.scb.mobilephone.view.ui.main.SectionsPagerAdapter
@@ -20,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainPresenter: MainInterface.MainPresenter
-    private lateinit var phonesList: ArrayList<PhoneBean>
+    private lateinit var phonesList: List<PhonesListEntity>
     private lateinit var favoritesList: List<FavoritesEntity>
 
     lateinit var sectionsPagerAdapter: SectionsPagerAdapter
@@ -50,8 +51,7 @@ class MainActivity : AppCompatActivity() {
             val mBuilder = AlertDialog.Builder(this@MainActivity)
             mBuilder.setSingleChoiceItems(listItems, -1) { dialogInterface, i ->
                 val selectedItem = listItems[i]
-                mainPresenter.sortPhonesList(phonesList, selectedItem)
-                mainPresenter.sortFavoritesList(favoritesList, selectedItem)
+                mainPresenter.sortList(phonesList, favoritesList, selectedItem)
                 dialogInterface.dismiss()
             }
             val mDialog = mBuilder.create()

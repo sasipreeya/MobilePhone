@@ -1,20 +1,18 @@
 package com.scb.mobilephone.presenters.interfaces
 
 import android.content.Context
-import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
+import com.scb.mobilephone.models.database.entities.PhonesListEntity
 
 interface MainInterface {
 
     interface MainPresenter {
 
-        fun sortPhonesList(list: ArrayList<PhoneBean>, sort: String)
-
-        fun sortFavoritesList(list: List<FavoritesEntity>, sort: String)
+        fun sortList(phonesList: List<PhonesListEntity>, favoriteslist: List<FavoritesEntity>, sort: String)
 
         fun postTask(task: Runnable)
 
-        fun getPhones(): ArrayList<PhoneBean>
+        fun getPhones(): List<PhonesListEntity>
 
         fun getFavorites(): List<FavoritesEntity>
 
@@ -22,7 +20,7 @@ interface MainInterface {
 
         fun setupTreadManager()
 
-        fun updatePhonesList(sortedList: ArrayList<PhoneBean>)
+        fun updatePhonesList(sortedList: List<PhonesListEntity>)
 
         fun updateFavoritesList(sortedList: List<FavoritesEntity>)
     }

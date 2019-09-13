@@ -1,7 +1,7 @@
 package com.scb.mobilephone.models.network;
 
-import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.models.PhotoBean
+import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -12,7 +12,7 @@ import retrofit2.http.Url
 interface ApiInterface {
 
     @GET("api/mobiles/")
-    fun getPhones(): Call<List<PhoneBean>>
+    fun getPhones(): Call<List<PhonesListEntity>>
 
     @GET()
     fun getPhotos(@Url url: String): Call<List<PhotoBean>>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
+import com.scb.mobilephone.models.database.entities.PhonesListEntity
 
 interface ListInterface {
 
@@ -13,18 +14,18 @@ interface ListInterface {
 
         fun hideLoading()
 
-        fun showPhonesList(phonesSortedList: ArrayList<PhoneBean>)
+        fun showPhonesList(phonesSortedList: List<PhonesListEntity>?)
     }
 
     interface ListPresenter {
 
         fun postTask(task: Runnable)
 
-        fun keepInDatabase(phonesList: ArrayList<PhoneBean>)
+        fun keepInDatabase(phonesList: List<PhonesListEntity>)
 
         fun feedPhonesList(context: Context)
 
-        fun getPhones(): ArrayList<PhoneBean>
+        fun getPhones(): List<PhonesListEntity>
 
         fun getFavorites(): List<FavoritesEntity>
 
@@ -45,7 +46,7 @@ interface ListInterface {
 
         fun setupTreadManager()
 
-        fun addFavoriteItem(phone: PhoneBean)
+        fun addFavoriteItem(phone: PhonesListEntity)
 
         fun removeFavoriteItem(id: Int)
     }

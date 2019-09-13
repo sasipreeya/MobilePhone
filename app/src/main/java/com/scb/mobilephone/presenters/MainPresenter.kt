@@ -6,7 +6,6 @@ import com.scb.mobilephone.extensions.PriceHL
 import com.scb.mobilephone.extensions.PriceLH
 import com.scb.mobilephone.extensions.RatingHL
 import com.scb.mobilephone.extensions.ThreadManager
-import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.models.database.AppDatabase
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
@@ -16,52 +15,27 @@ class MainPresenter : MainInterface.MainPresenter {
 
     private var mDatabase: AppDatabase? = null
     private lateinit var mThreadManager: ThreadManager
-
-    private var sortedList: ArrayList<PhoneBean> = ArrayList()
+    private lateinit var sortedPhonesList: List<PhonesListEntity>
     private lateinit var sortedFavoritesList: List<FavoritesEntity>
 
-    override fun sortPhonesList(list: ArrayList<PhoneBean>, sort: String) {
-        sortedList.clear()
+    override fun sortList(phonesList: List<PhonesListEntity>, favoriteslist: List<FavoritesEntity>, sort: String) {
         when (sort) {
             PriceLH -> {
-                sortedList.addAll(list.sortedBy { it.price })
-                list.clear()
-                list.addAll(sortedList)
-                updatePhonesList(list)
-            }
-            PriceHL -> {
-                sortedList.addAll(list.sortedByDescending { it.price })
-                list.clear()
-                list.addAll(sortedList)
-                updatePhonesList(list)
-            }
-            RatingHL -> {
-                sortedList.addAll(list.sortedByDescending { it.rating })
-                list.clear()
-                list.addAll(sortedList)
-                updatePhonesList(list)
-            }
-            else -> {
-                sortedList.addAll(list)
-                list.clear()
-                list.addAll(sortedList)
-                updatePhonesList(list)
-            }
-        }
-    }
-
-    override fun sortFavoritesList(list: List<FavoritesEntity>, sort: String) {
-        when (sort) {
-            PriceLH -> {
-                sortedFavoritesList = list.sortedBy { it.price }
+                sortedPhonesList = phonesList.sortedBy { it.price }
+                sortedFavoritesList = favoriteslist.sortedBy { it.price }
+                updatePhonesList(sortedPhonesList)
                 updateFavoritesList(sortedFavoritesList)
             }
             PriceHL -> {
-                sortedFavoritesList = list.sortedByDescending { it.price }
+                sortedPhonesList = phonesList.sortedByDescending { it.price }
+                sortedFavoritesList = favoriteslist.sortedByDescending { it.price }
+                updatePhonesList(sortedPhonesList)
                 updateFavoritesList(sortedFavoritesList)
             }
             RatingHL -> {
-                sortedFavoritesList = list.sortedByDescending { it.rating }
+                sortedPhonesList = phonesList.sortedByDescending { it.rating }
+                sortedFavoritesList = favoriteslist.sortedByDescending { it.rating }
+                updatePhonesList(sortedPhonesList)
                 updateFavoritesList(sortedFavoritesList)
             }
         }
@@ -71,11 +45,9 @@ class MainPresenter : MainInterface.MainPresenter {
         mThreadManager.postTask(task)
     }
 
-    override fun getPhones(): ArrayList<PhoneBean> {
-        return mDatabase?.let {
-            it.phonesListDao().queryPhonesList()?.phonesList
-        } ?: run {
-            arrayListOf<PhoneBean>()
+    override fun getPhones(): List<PhonesListEntity> {
+        return mDatabase?.phonesListDao()?.queryPhonesList() ?: run {
+            arrayListOf<PhonesListEntity>()
         }
     }
 
@@ -97,10 +69,9 @@ class MainPresenter : MainInterface.MainPresenter {
         }
     }
 
-    override fun updatePhonesList(sortedList: ArrayList<PhoneBean>) {
-        val sortedPhonesList = PhonesListEntity(1, sortedList)
+    override fun updatePhonesList(sortedList: List<PhonesListEntity>) {
         val task = Runnable {
-            mDatabase!!.phonesListDao().updatePhonesList(sortedPhonesList)
+            mDatabase!!.phonesListDao().updatePhonesList(sortedList)
         }
         mThreadManager.postTask(task)
     }
