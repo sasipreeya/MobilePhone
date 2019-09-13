@@ -67,6 +67,7 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
     }
 
     override fun showFavoritesList(favoritesSortedList: ArrayList<FavoritesEntity>) {
+        mAdapter.mData = favoritesSortedList
         mAdapter.notifyDataSetChanged()
         mAdapter.setData(favoritesSortedList)
 
@@ -84,7 +85,7 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
         RecyclerView.Adapter<CustomAdapter.CustomHolder>(),
         CustomItemTouchHelperListener {
 
-        private val mData: ArrayList<FavoritesEntity> = arrayListOf()
+        var mData: ArrayList<FavoritesEntity> = arrayListOf()
 
         fun setData(list: ArrayList<FavoritesEntity>) {
             mData.clear()
