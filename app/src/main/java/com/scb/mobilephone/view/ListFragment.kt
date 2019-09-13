@@ -28,7 +28,6 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
 
     lateinit var listPresenter: ListInterface.ListPresenter
     lateinit var mAdapter: CustomAdapter
-
     lateinit var phonesList: ArrayList<PhoneBean>
     lateinit var favoritesList: List<FavoritesEntity>
 

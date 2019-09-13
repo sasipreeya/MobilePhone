@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mainPresenter: MainInterface.SortPresenter
+    private lateinit var mainPresenter: MainInterface.MainPresenter
     private lateinit var phonesList: ArrayList<PhoneBean>
     private lateinit var favoritesList: List<FavoritesEntity>
 

@@ -6,7 +6,7 @@ import com.scb.mobilephone.models.database.entities.FavoritesEntity
 
 interface MainInterface {
 
-    interface SortPresenter {
+    interface MainPresenter {
 
         fun sortPhonesList(list: ArrayList<PhoneBean>, sort: String)
 

@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.scb.mobilephone.R
-import com.scb.mobilephone.extensions.ThreadManager
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.presenters.FavoritePresenter
 import com.scb.mobilephone.presenters.interfaces.FavoriteInterface
@@ -101,10 +100,9 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
 
         override fun onItemDismiss(position: Int) {
             favoritePresenter.removeFavoriteItem(mData[position].id)
-            favoritePresenter.getFavoritesList(context)
             mData.removeAt(position)
+            favoritePresenter.getFavoritesList(context)
             notifyItemRemoved(position)
-            mAdapter.notifyDataSetChanged()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {

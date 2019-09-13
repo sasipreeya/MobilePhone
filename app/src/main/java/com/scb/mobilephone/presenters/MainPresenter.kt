@@ -12,8 +12,7 @@ import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.presenters.interfaces.MainInterface
 
-
-class MainPresenter : MainInterface.SortPresenter {
+class MainPresenter : MainInterface.MainPresenter {
 
     private var mDatabase: AppDatabase? = null
     private lateinit var mThreadManager: ThreadManager
