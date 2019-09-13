@@ -54,16 +54,15 @@ class MainPresenter : MainInterface.MainPresenter {
         when (sort) {
             PriceLH -> {
                 sortedFavoritesList = list.sortedBy { it.price }
-                // updateFavoritesList(sortedFavoritesList)
+                updateFavoritesList(sortedFavoritesList)
             }
             PriceHL -> {
                 sortedFavoritesList = list.sortedByDescending { it.price }
-                // updateFavoritesList(sortedFavoritesList)
-                Log.d("update", sortedFavoritesList.toString())
+                updateFavoritesList(sortedFavoritesList)
             }
             RatingHL -> {
                 sortedFavoritesList = list.sortedByDescending { it.rating }
-                // updateFavoritesList(sortedFavoritesList)
+                updateFavoritesList(sortedFavoritesList)
             }
         }
     }

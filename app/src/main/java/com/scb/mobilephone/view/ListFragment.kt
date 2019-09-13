@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.phone_list.view.*
 class ListFragment : BaseSortFragment(), ListInterface.ListView {
 
     lateinit var listPresenter: ListInterface.ListPresenter
-    lateinit var mAdapter: CustomAdapter
+    private lateinit var mAdapter: CustomAdapter
     lateinit var phonesList: ArrayList<PhoneBean>
     lateinit var favoritesList: List<FavoritesEntity>
 
@@ -91,6 +91,7 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
         }
         listPresenter.postTask(task)
         mAdapter.notifyDataSetChanged()
+        showPhonesList(phonesList)
         hideLoading()
     }
 

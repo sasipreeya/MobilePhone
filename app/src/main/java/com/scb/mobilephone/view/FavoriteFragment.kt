@@ -67,8 +67,8 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
 
     override fun showFavoritesList(favoritesSortedList: ArrayList<FavoritesEntity>) {
         mAdapter.mData = favoritesSortedList
-        mAdapter.notifyDataSetChanged()
         mAdapter.setData(favoritesSortedList)
+        mAdapter.notifyDataSetChanged()
 
         swipeRefresh.setOnRefreshListener {
             updateFragment()
