@@ -113,7 +113,15 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: CustomHolder, position: Int) {
             val item = phonesList[position]
-            val favoriteItem = FavoritesEntity(item.id, item.description, item.brand, item.name, item.price, item.rating, item.thumbImageURL)
+            val favoriteItem = FavoritesEntity(
+                item.id,
+                item.description,
+                item.brand,
+                item.name,
+                item.price,
+                item.rating,
+                item.thumbImageURL
+            )
             holder.phoneName.text = item.name
             holder.phoneDetail.text = item.description
             holder.phonePrice.text = "Price : $" + item.price

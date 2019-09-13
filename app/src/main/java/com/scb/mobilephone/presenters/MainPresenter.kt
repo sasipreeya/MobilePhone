@@ -108,7 +108,7 @@ class MainPresenter : MainInterface.MainPresenter {
     override fun updateFavoritesList(sortedList: List<FavoritesEntity>) {
         val task = Runnable {
             mDatabase!!.favoritesListDao().updateData(sortedList)
-            Log.d("update", mDatabase!!.favoritesListDao().updateData(sortedList).toString())
+            Log.d("update", mDatabase!!.favoritesListDao().queryFavoritesList().toString())
         }
         mThreadManager.postTask(task)
     }
