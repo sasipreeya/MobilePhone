@@ -19,9 +19,5 @@ interface MainInterface {
         fun setupDatabase(context: Context)
 
         fun setupTreadManager()
-
-        fun updatePhonesList(sortedList: List<PhonesListEntity>)
-
-        fun updateFavoritesList(sortedList: List<FavoritesEntity>)
     }
 }

@@ -34,15 +34,15 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
         savedInstanceState: Bundle?
     ): View? {
 
-        favoritePresenter = FavoritePresenter(this)
-        favoritePresenter.setupTreadManager()
-        favoritePresenter.setupDatabase(context!!)
-
         return inflater.inflate(R.layout.fragment_favorite, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        favoritePresenter = FavoritePresenter(this)
+        favoritePresenter.setupTreadManager()
+        favoritePresenter.setupDatabase(context!!)
 
         mAdapter = CustomAdapter(context!!)
         view.recyclerView.let {

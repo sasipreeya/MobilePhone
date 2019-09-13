@@ -18,16 +18,4 @@ interface FavoritesListDAO {
 
     @Query("DELETE FROM favorite WHERE id = :id")
     fun deleteFavorite(id: Int)
-
-    @Transaction
-    fun updateData(favorites: List<FavoritesEntity>) {
-        deleteAllFavorite()
-        insertAll(favorites)
-    }
-
-    @Insert
-    fun insertAll(favorites: List<FavoritesEntity>)
-
-    @Query("DELETE FROM favorite")
-    fun deleteAllFavorite()
 }

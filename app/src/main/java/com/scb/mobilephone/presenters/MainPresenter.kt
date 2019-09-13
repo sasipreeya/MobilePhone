@@ -22,20 +22,14 @@ class MainPresenter : MainInterface.MainPresenter {
             PriceLH -> {
                 sortedPhonesList = phonesList.sortedBy { it.price }
                 sortedFavoritesList = favoriteslist.sortedBy { it.price }
-                updatePhonesList(sortedPhonesList)
-                updateFavoritesList(sortedFavoritesList)
             }
             PriceHL -> {
                 sortedPhonesList = phonesList.sortedByDescending { it.price }
                 sortedFavoritesList = favoriteslist.sortedByDescending { it.price }
-                updatePhonesList(sortedPhonesList)
-                updateFavoritesList(sortedFavoritesList)
             }
             RatingHL -> {
                 sortedPhonesList = phonesList.sortedByDescending { it.rating }
                 sortedFavoritesList = favoriteslist.sortedByDescending { it.rating }
-                updatePhonesList(sortedPhonesList)
-                updateFavoritesList(sortedFavoritesList)
             }
         }
     }
@@ -66,19 +60,5 @@ class MainPresenter : MainInterface.MainPresenter {
         mThreadManager = ThreadManager("database").also {
             it.start()
         }
-    }
-
-    override fun updatePhonesList(sortedList: List<PhonesListEntity>) {
-        val task = Runnable {
-            mDatabase!!.phonesListDao().updateData(sortedList)
-        }
-        mThreadManager.postTask(task)
-    }
-
-    override fun updateFavoritesList(sortedList: List<FavoritesEntity>) {
-        val task = Runnable {
-            mDatabase!!.favoritesListDao().updateData(sortedList)
-        }
-        mThreadManager.postTask(task)
     }
 }

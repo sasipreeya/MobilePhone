@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.phone_list.view.*
 class ListFragment : BaseSortFragment(), ListInterface.ListView {
 
     lateinit var listPresenter: ListInterface.ListPresenter
-    private lateinit var mAdapter: CustomAdapter
+    lateinit var mAdapter: CustomAdapter
     lateinit var phonesList: List<PhonesListEntity>
     lateinit var favoritesList: List<FavoritesEntity>
 
@@ -36,15 +36,15 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
         savedInstanceState: Bundle?
     ): View? {
 
-        listPresenter = ListPresenter(this)
-        listPresenter.setupTreadManager()
-        listPresenter.setupDatabase(context!!)
-
         return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        listPresenter = ListPresenter(this)
+        listPresenter.setupTreadManager()
+        listPresenter.setupDatabase(context!!)
 
         mAdapter = CustomAdapter(context!!)
         view.listRecyclerView.let {
