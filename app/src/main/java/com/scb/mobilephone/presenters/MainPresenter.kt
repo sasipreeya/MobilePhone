@@ -1,7 +1,6 @@
 package com.scb.mobilephone.presenters
 
 import android.content.Context
-import android.util.Log
 import com.scb.mobilephone.extensions.PriceHL
 import com.scb.mobilephone.extensions.PriceLH
 import com.scb.mobilephone.extensions.RatingHL
@@ -71,7 +70,7 @@ class MainPresenter : MainInterface.MainPresenter {
 
     override fun updatePhonesList(sortedList: List<PhonesListEntity>) {
         val task = Runnable {
-            mDatabase!!.phonesListDao().updatePhonesList(sortedList)
+            mDatabase!!.phonesListDao().updateData(sortedList)
         }
         mThreadManager.postTask(task)
     }
@@ -79,7 +78,6 @@ class MainPresenter : MainInterface.MainPresenter {
     override fun updateFavoritesList(sortedList: List<FavoritesEntity>) {
         val task = Runnable {
             mDatabase!!.favoritesListDao().updateData(sortedList)
-            Log.d("update", mDatabase!!.favoritesListDao().queryFavoritesList().toString())
         }
         mThreadManager.postTask(task)
     }

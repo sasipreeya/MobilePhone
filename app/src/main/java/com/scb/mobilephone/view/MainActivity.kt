@@ -9,7 +9,6 @@ import com.scb.mobilephone.R
 import com.scb.mobilephone.extensions.PriceHL
 import com.scb.mobilephone.extensions.PriceLH
 import com.scb.mobilephone.extensions.RatingHL
-import com.scb.mobilephone.models.PhoneBean
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.presenters.MainPresenter
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
         val viewPager: ViewPager = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
-        val tabs: TabLayout = this.findViewById(R.id.tabs)
+        val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
 
         mainPresenter = MainPresenter()
@@ -52,6 +51,8 @@ class MainActivity : AppCompatActivity() {
             mBuilder.setSingleChoiceItems(listItems, -1) { dialogInterface, i ->
                 val selectedItem = listItems[i]
                 mainPresenter.sortList(phonesList, favoritesList, selectedItem)
+                sectionsPagerAdapter.updateListFragment()
+                sectionsPagerAdapter.updateFavoriteFragment()
                 dialogInterface.dismiss()
             }
             val mDialog = mBuilder.create()

@@ -14,4 +14,16 @@ interface PhonesListDAO {
 
     @Update
     fun updatePhonesList(phoneslist: List<PhonesListEntity>)
+
+    @Transaction
+    fun updateData(favorites: List<PhonesListEntity>) {
+        deleteAllFavorite()
+        insertAll(favorites)
+    }
+
+    @Insert
+    fun insertAll(favorites: List<PhonesListEntity>)
+
+    @Query("DELETE FROM phones_list")
+    fun deleteAllFavorite()
 }

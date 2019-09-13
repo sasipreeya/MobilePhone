@@ -13,7 +13,12 @@ interface FavoritesListDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addFavorite(favorites: FavoritesEntity)
 
-    // update when sorted
+    @Update
+    fun updateFavoritesList(phoneslist: List<FavoritesEntity>)
+
+    @Query("DELETE FROM favorite WHERE id = :id")
+    fun deleteFavorite(id: Int)
+
     @Transaction
     fun updateData(favorites: List<FavoritesEntity>) {
         deleteAllFavorite()
@@ -25,8 +30,4 @@ interface FavoritesListDAO {
 
     @Query("DELETE FROM favorite")
     fun deleteAllFavorite()
-
-    // delete favorite item
-    @Query("DELETE FROM favorite WHERE id = :id")
-    fun deleteFavorite(id: Int)
 }
