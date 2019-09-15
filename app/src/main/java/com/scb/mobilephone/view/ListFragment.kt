@@ -103,6 +103,7 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView, SortInterface.S
     }
 
     override fun submitPhonesList(phonesList: List<PhonesListEntity>) {
+        this.phonesList = phonesList
         mAdapter.setData(phonesList)
         mAdapter.notifyDataSetChanged()
     }

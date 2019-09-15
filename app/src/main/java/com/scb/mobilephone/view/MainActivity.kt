@@ -73,10 +73,10 @@ class MainActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 when (position) {
                     0 -> {
-                        sectionsPagerAdapter.updateListFragment()
+                        // sectionsPagerAdapter.updateListFragment()
                     }
                     1 -> {
-                        sectionsPagerAdapter.updateFavoriteFragment()
+                        // sectionsPagerAdapter.updateFavoriteFragment()
                     }
                 }
             }
