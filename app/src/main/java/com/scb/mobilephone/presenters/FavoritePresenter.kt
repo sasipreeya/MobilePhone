@@ -7,7 +7,7 @@ import com.scb.mobilephone.models.database.AppDatabase
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.presenters.interfaces.FavoriteInterface
 
-class FavoritePresenter(_view: FavoriteInterface.FavoriteView) :
+class FavoritePresenter(_view: FavoriteInterface.FavoriteView, private val sortPresenter: SortInterface.SortPresenter) :
     FavoriteInterface.FavoritePresenter {
 
     private var favoritesList: ArrayList<FavoritesEntity> = ArrayList()

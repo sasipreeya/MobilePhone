@@ -17,15 +17,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.scb.mobilephone.R
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
+import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.presenters.FavoritePresenter
+import com.scb.mobilephone.presenters.SortInterface
+import com.scb.mobilephone.presenters.SortList
 import com.scb.mobilephone.presenters.interfaces.FavoriteInterface
 import kotlinx.android.synthetic.main.favorite_list.view.*
 import kotlinx.android.synthetic.main.fragment_favorite.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
 
-class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
+class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView, SortInterface.SortToView {
 
+    lateinit var sortPresenter: SortInterface.SortPresenter
     lateinit var favoritePresenter: FavoriteInterface.FavoritePresenter
     lateinit var mAdapter: CustomAdapter
 
@@ -40,7 +44,8 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        favoritePresenter = FavoritePresenter(this)
+        sortPresenter = SortList(this)
+        favoritePresenter = FavoritePresenter(this, sortPresenter)
         favoritePresenter.setupTreadManager()
         favoritePresenter.setupDatabase(context!!)
 
@@ -78,6 +83,18 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView {
     override fun updateFragment() {
         favoritePresenter.getFavoritesList(context!!)
         mAdapter.notifyDataSetChanged()
+    }
+
+    override fun submitPhonesList(phonesList: List<PhonesListEntity>) {
+
+    }
+
+    override fun submitFavoritesList(favoriteList: List<FavoritesEntity>) {
+
+    }
+
+    override fun getSortType(sortType: String) {
+
     }
 
     inner class CustomAdapter(val context: Context) :

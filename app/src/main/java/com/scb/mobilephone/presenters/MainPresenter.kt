@@ -1,6 +1,7 @@
 package com.scb.mobilephone.presenters
 
 import android.content.Context
+import android.util.Log
 import com.scb.mobilephone.extensions.PriceHL
 import com.scb.mobilephone.extensions.PriceLH
 import com.scb.mobilephone.extensions.RatingHL
@@ -22,14 +23,17 @@ class MainPresenter : MainInterface.MainPresenter {
             PriceLH -> {
                 sortedPhonesList = phonesList.sortedBy { it.price }
                 sortedFavoritesList = favoriteslist.sortedBy { it.price }
+                Log.d("sorted", sortedPhonesList.toString())
             }
             PriceHL -> {
                 sortedPhonesList = phonesList.sortedByDescending { it.price }
                 sortedFavoritesList = favoriteslist.sortedByDescending { it.price }
+                Log.d("sorted", sortedPhonesList.toString())
             }
             RatingHL -> {
                 sortedPhonesList = phonesList.sortedByDescending { it.rating }
                 sortedFavoritesList = favoriteslist.sortedByDescending { it.rating }
+                Log.d("sorted", sortedPhonesList.toString())
             }
         }
     }

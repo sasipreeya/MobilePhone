@@ -14,13 +14,19 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ListPresenter(_view: ListInterface.ListView) : ListInterface.ListPresenter {
+class ListPresenter(_view: ListInterface.ListView, private val sortPresenter: SortInterface.SortPresenter) : ListInterface.ListPresenter {
 
     private var mDatabase: AppDatabase? = null
     private lateinit var mThreadManager: ThreadManager
 
     private var mDataArray: List<PhonesListEntity> = listOf()
     private var view: ListInterface.ListView = _view
+    private var mSortType = "none"
+
+    override fun getSortType(sortType: String) {
+        this.mSortType = sortType
+        sortPresenter.sortPhonesList(mSortType, mDataArray)
+    }
 
     override fun feedPhonesList(context: Context) {
         val call = ApiInterface.getClient().getPhones()

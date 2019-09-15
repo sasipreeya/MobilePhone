@@ -30,8 +30,8 @@ class SortList(private val view: SortInterface.SortToView) : SortInterface.SortP
     private lateinit var sortedPhonesList: List<PhonesListEntity>
     private lateinit var sortedFavoritesList: List<FavoritesEntity>
 
-    override fun sortPhonesList(sort: String, phonesList: List<PhonesListEntity>) {
-        when (sort) {
+    override fun sortPhonesList(sortType: String, phonesList: List<PhonesListEntity>) {
+        when (sortType) {
             PriceLH -> {
                 sortedPhonesList = phonesList.sortedBy { it.price }
             }
@@ -45,8 +45,8 @@ class SortList(private val view: SortInterface.SortToView) : SortInterface.SortP
         view.submitPhonesList(sortedPhonesList)
     }
 
-    override fun sortFavoritesList(sort: String, favoriteList: List<FavoritesEntity>) {
-        when (sort) {
+    override fun sortFavoritesList(sortType: String, favoriteList: List<FavoritesEntity>) {
+        when (sortType) {
             PriceLH -> {
                 sortedFavoritesList = favoriteList.sortedBy { it.price }
             }

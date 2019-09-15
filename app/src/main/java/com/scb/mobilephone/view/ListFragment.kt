@@ -18,14 +18,17 @@ import com.scb.mobilephone.R
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.presenters.ListPresenter
+import com.scb.mobilephone.presenters.SortInterface
+import com.scb.mobilephone.presenters.SortList
 import com.scb.mobilephone.presenters.interfaces.ListInterface
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.phone_list.view.*
 
 
-class ListFragment : BaseSortFragment(), ListInterface.ListView {
+class ListFragment : BaseSortFragment(), ListInterface.ListView, SortInterface.SortToView {
 
+    lateinit var sortPresenter: SortInterface.SortPresenter
     lateinit var listPresenter: ListInterface.ListPresenter
     lateinit var mAdapter: CustomAdapter
     lateinit var phonesList: List<PhonesListEntity>
@@ -42,7 +45,8 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listPresenter = ListPresenter(this)
+        sortPresenter = SortList(this)
+        listPresenter = ListPresenter(this, sortPresenter)
         listPresenter.setupTreadManager()
         listPresenter.setupDatabase(context!!)
 
@@ -95,6 +99,20 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView {
         mAdapter.notifyDataSetChanged()
         showPhonesList(phonesList)
         hideLoading()
+    }
+
+    override fun submitPhonesList(phonesList: List<PhonesListEntity>) {
+        mAdapter.setData(phonesList)
+        mAdapter.notifyDataSetChanged()
+    }
+
+    override fun submitFavoritesList(favoriteList: List<FavoritesEntity>) {
+
+    }
+
+    override fun getSortType(sortType: String) {
+        listPresenter.getSortType(sortType)
+        mAdapter.notifyDataSetChanged()
     }
 
     inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomHolder>() {

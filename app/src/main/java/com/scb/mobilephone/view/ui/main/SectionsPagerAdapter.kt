@@ -18,8 +18,7 @@ class SectionsPagerAdapter(private val context: MainActivity, private val fragme
     FragmentPagerAdapter(fragmentManager) {
 
     fun getSortType(sortType: String) {
-        val fragments = fragmentManager.fragments
-        fragments.forEach {
+        fragmentManager.fragments.forEach {
             if (it is SortInterface.SortToView) {
                 it.getSortType(sortType)
             }
