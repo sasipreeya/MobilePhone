@@ -27,8 +27,8 @@ interface SortInterface {
 
 class SortList(private val view: SortInterface.SortToView) : SortInterface.SortPresenter {
 
-    private lateinit var sortedPhonesList: List<PhonesListEntity>
-    private lateinit var sortedFavoritesList: List<FavoritesEntity>
+    lateinit var sortedPhonesList: List<PhonesListEntity>
+    lateinit var sortedFavoritesList: List<FavoritesEntity>
 
     override fun sortPhonesList(sortType: String, phonesList: List<PhonesListEntity>) {
         when (sortType) {
