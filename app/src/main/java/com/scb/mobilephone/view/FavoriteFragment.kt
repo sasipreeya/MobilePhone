@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.favorite_list.view.*
 import kotlinx.android.synthetic.main.fragment_favorite.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView, SortInterface.SortToView {
 
@@ -90,11 +91,13 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView, Sor
     }
 
     override fun submitFavoritesList(favoriteList: List<FavoritesEntity>) {
-
+        mAdapter.setData(ArrayList(favoriteList))
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun getSortType(sortType: String) {
-
+        favoritePresenter.getSortType(sortType)
+        mAdapter.notifyDataSetChanged()
     }
 
     inner class CustomAdapter(val context: Context) :

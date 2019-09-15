@@ -13,8 +13,13 @@ class FavoritePresenter(_view: FavoriteInterface.FavoriteView, private val sortP
     private var favoritesList: ArrayList<FavoritesEntity> = ArrayList()
     private var mDatabase: AppDatabase? = null
     private lateinit var mThreadManager: ThreadManager
-
+    private var mSortType = "none"
     private var view: FavoriteInterface.FavoriteView = _view
+
+    override fun getSortType(sortType: String) {
+        this.mSortType = sortType
+        sortPresenter.sortFavoritesList(mSortType, favoritesList.toList())
+    }
 
     override fun setupDatabase(context: Context) {
         mDatabase = AppDatabase.getInstance(context).also {

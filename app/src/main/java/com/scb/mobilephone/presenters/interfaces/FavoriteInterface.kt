@@ -23,6 +23,8 @@ interface FavoriteInterface {
 
         fun postTask(task: Runnable)
 
+        fun getSortType(sortType: String)
+
         fun getFavoritesList(context: Context)
 
         fun removeFavoriteItem(id: Int)
