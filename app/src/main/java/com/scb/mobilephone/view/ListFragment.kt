@@ -28,10 +28,11 @@ import kotlinx.android.synthetic.main.phone_list.view.*
 
 class ListFragment : BaseSortFragment(), ListInterface.ListView, SortInterface.SortToView {
 
-    lateinit var sortPresenter: SortInterface.SortPresenter
+    private lateinit var sortPresenter: SortInterface.SortPresenter
+    private lateinit var phonesList: List<PhonesListEntity>
+
     lateinit var listPresenter: ListInterface.ListPresenter
     lateinit var mAdapter: CustomAdapter
-    lateinit var phonesList: List<PhonesListEntity>
     lateinit var favoritesList: List<FavoritesEntity>
 
     override fun onCreateView(

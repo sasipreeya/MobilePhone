@@ -30,7 +30,8 @@ import kotlin.collections.ArrayList
 
 class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView, SortInterface.SortToView {
 
-    lateinit var sortPresenter: SortInterface.SortPresenter
+    private lateinit var sortPresenter: SortInterface.SortPresenter
+
     lateinit var favoritePresenter: FavoriteInterface.FavoritePresenter
     lateinit var mAdapter: CustomAdapter
 
