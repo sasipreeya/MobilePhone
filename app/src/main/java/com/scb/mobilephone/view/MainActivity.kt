@@ -1,7 +1,6 @@
 package com.scb.mobilephone.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
@@ -50,9 +49,7 @@ class MainActivity : AppCompatActivity() {
             val mBuilder = AlertDialog.Builder(this@MainActivity)
             mBuilder.setSingleChoiceItems(listItems, -1) { dialogInterface, i ->
                 val selectedItem = listItems[i]
-                Log.d("selected", selectedItem)
                 sectionsPagerAdapter.getSortType(selectedItem)
-                // mainPresenter.sortList(phonesList, favoritesList, selectedItem)
                 dialogInterface.dismiss()
             }
             val mDialog = mBuilder.create()

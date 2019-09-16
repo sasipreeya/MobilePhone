@@ -1,6 +1,10 @@
 <resources>
+
     <string name="app_name">MobilePhone</string>
     <string name="tab_text_1">MOBILE LIST</string>
     <string name="tab_text_2">FAVORITE LIST</string>
+    <string name="please_wait">Please wait …</string>
+    <string name="sorted_button">Sorted Button</string>
+    <string name="phone_image">phone_image</string>
 
 </resources>

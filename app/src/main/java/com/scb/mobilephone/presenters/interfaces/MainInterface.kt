@@ -8,8 +8,6 @@ interface MainInterface {
 
     interface MainPresenter {
 
-        fun sortList(phonesList: List<PhonesListEntity>, favoritesList: List<FavoritesEntity>, sort: String)
-
         fun postTask(task: Runnable)
 
         fun getPhones(): List<PhonesListEntity>

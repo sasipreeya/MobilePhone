@@ -30,7 +30,7 @@
             <ImageButton
                     android:id="@+id/sortBtn"
                     android:src="@drawable/ic_sort_white_24dp"
-                    android:contentDescription="Sorted Button"
+                    android:contentDescription="@string/sorted_button"
                     android:background="?selectableItemBackgroundBorderless"
                     android:layout_margin="14dp"
                     android:layout_alignParentEnd="true"

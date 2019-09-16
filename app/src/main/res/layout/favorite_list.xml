@@ -19,7 +19,7 @@
                     android:layout_height="100dp"
                     android:layout_margin="8dp"
                     android:scaleType="centerCrop"
-                    android:contentDescription="phone_image"
+                    android:contentDescription="@string/phone_image"
                     android:src="@mipmap/ic_launcher" />
 
             <TextView

@@ -18,7 +18,7 @@ interface ApiInterface {
     fun getPhotos(@Url url: String): Call<List<PhotoBean>>
 
     companion object Factory {
-        private val BASE_URL = "https://scb-test-mobile.herokuapp.com/"
+        private const val BASE_URL = "https://scb-test-mobile.herokuapp.com/"
 
         private var retrofit: Retrofit? = null
 

@@ -1,10 +1,6 @@
 package com.scb.mobilephone.presenters
 
 import android.content.Context
-import android.util.Log
-import com.scb.mobilephone.extensions.PriceHL
-import com.scb.mobilephone.extensions.PriceLH
-import com.scb.mobilephone.extensions.RatingHL
 import com.scb.mobilephone.extensions.ThreadManager
 import com.scb.mobilephone.models.database.AppDatabase
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
@@ -15,28 +11,6 @@ class MainPresenter : MainInterface.MainPresenter {
 
     private var mDatabase: AppDatabase? = null
     private lateinit var mThreadManager: ThreadManager
-    private lateinit var sortedPhonesList: List<PhonesListEntity>
-    private lateinit var sortedFavoritesList: List<FavoritesEntity>
-
-    override fun sortList(phonesList: List<PhonesListEntity>, favoritesList: List<FavoritesEntity>, sort: String) {
-        when (sort) {
-            PriceLH -> {
-                sortedPhonesList = phonesList.sortedBy { it.price }
-                sortedFavoritesList = favoritesList.sortedBy { it.price }
-                Log.d("sorted", sortedPhonesList.toString())
-            }
-            PriceHL -> {
-                sortedPhonesList = phonesList.sortedByDescending { it.price }
-                sortedFavoritesList = favoritesList.sortedByDescending { it.price }
-                Log.d("sorted", sortedPhonesList.toString())
-            }
-            RatingHL -> {
-                sortedPhonesList = phonesList.sortedByDescending { it.rating }
-                sortedFavoritesList = favoritesList.sortedByDescending { it.rating }
-                Log.d("sorted", sortedPhonesList.toString())
-            }
-        }
-    }
 
     override fun postTask(task: Runnable) {
         mThreadManager.postTask(task)
