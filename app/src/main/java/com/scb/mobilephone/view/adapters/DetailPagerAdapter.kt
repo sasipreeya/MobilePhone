@@ -1,4 +1,4 @@
-package com.scb.mobilephone.view
+package com.scb.mobilephone.view.adapters
 
 import android.content.Context
 import android.view.View

@@ -9,6 +9,7 @@ import androidx.viewpager.widget.ViewPager
 import com.scb.mobilephone.R
 import com.scb.mobilephone.presenters.DetailPresenter
 import com.scb.mobilephone.presenters.interfaces.DetailInterface
+import com.scb.mobilephone.view.adapters.DetailPagerAdapter
 import kotlinx.android.synthetic.main.activity_detail.*
 
 
@@ -43,7 +44,8 @@ class DetailActivity : AppCompatActivity(), DetailInterface.DetailView {
     }
 
     override fun showImageDetail(urlList: ArrayList<String>) {
-        detailPagerAdapter = DetailPagerAdapter(this, urlList, width, height)
+        detailPagerAdapter =
+            DetailPagerAdapter(this, urlList, width, height)
         val params = LinearLayout.LayoutParams(width, height)
         viewPager.layoutParams = params
         viewPager.adapter = detailPagerAdapter
