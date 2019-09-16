@@ -9,3 +9,4 @@ const val DatabaseName = "Database"
 
 const val AddFavorite = "Added to favorite"
 const val RemoveFavorite = "Removed from favorite"
+const val SortBy = "Sorted by "

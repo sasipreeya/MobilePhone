@@ -1,6 +1,7 @@
 package com.scb.mobilephone.view
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
@@ -9,6 +10,7 @@ import com.scb.mobilephone.R
 import com.scb.mobilephone.extensions.PriceHL
 import com.scb.mobilephone.extensions.PriceLH
 import com.scb.mobilephone.extensions.RatingHL
+import com.scb.mobilephone.extensions.SortBy
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.presenters.MainPresenter
@@ -51,6 +53,7 @@ class MainActivity : AppCompatActivity() {
                 val selectedItem = listItems[i]
                 sectionsPagerAdapter.getSortType(selectedItem)
                 dialogInterface.dismiss()
+                showToast(SortBy + selectedItem)
             }
             val mDialog = mBuilder.create()
             mDialog.show()
@@ -77,5 +80,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
