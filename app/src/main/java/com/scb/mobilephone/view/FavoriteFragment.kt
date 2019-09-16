@@ -1,41 +1,32 @@
 package com.scb.mobilephone.view
 
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.scb.mobilephone.R
-import com.scb.mobilephone.extensions.RemoveFavorite
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.presenters.FavoritePresenter
 import com.scb.mobilephone.presenters.SortInterface
 import com.scb.mobilephone.presenters.SortList
 import com.scb.mobilephone.presenters.interfaces.FavoriteInterface
-import kotlinx.android.synthetic.main.favorite_list.view.*
+import com.scb.mobilephone.view.adapters.CustomItemTouchHelperCallback
+import com.scb.mobilephone.view.adapters.FavoritesAdapter
 import kotlinx.android.synthetic.main.fragment_favorite.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
-import java.util.*
-import kotlin.collections.ArrayList
 
-class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView, SortInterface.SortToView {
+class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView,
+    SortInterface.SortToView {
 
     private lateinit var sortPresenter: SortInterface.SortPresenter
 
-    lateinit var favoritePresenter: FavoriteInterface.FavoritePresenter
-    lateinit var mAdapter: CustomAdapter
+    private lateinit var favoritePresenter: FavoriteInterface.FavoritePresenter
+    private lateinit var mAdapter: FavoritesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,7 +44,25 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView, Sor
         favoritePresenter.setupTreadManager()
         favoritePresenter.setupDatabase(context!!)
 
-        mAdapter = CustomAdapter(context!!)
+        mAdapter = FavoritesAdapter(context!!, object : FavoritesAdapter.FavoriteListener {
+            override fun getFavoritesList() {
+                favoritePresenter.getFavoritesList(context!!)
+            }
+
+            override fun removeFromFavorite(item: ArrayList<FavoritesEntity>, position: Int) {
+                favoritePresenter.removeFavoriteItem(item[position].id)
+            }
+
+            override fun gotoDetailPage(item: FavoritesEntity) {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("name", item.name)
+                intent.putExtra("brand", item.brand)
+                intent.putExtra("detail", item.description)
+                intent.putExtra("price", item.price)
+                intent.putExtra("rating", item.rating)
+            }
+        })
+
         view.recyclerView.let {
             it.adapter = mAdapter
             it.layoutManager = LinearLayoutManager(activity)
@@ -101,116 +110,5 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView, Sor
     override fun getSortType(sortType: String) {
         favoritePresenter.getSortType(sortType)
         mAdapter.notifyDataSetChanged()
-    }
-
-    fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
-    inner class CustomAdapter(val context: Context) :
-        RecyclerView.Adapter<CustomAdapter.CustomHolder>(),
-        CustomItemTouchHelperListener {
-
-        var mData: ArrayList<FavoritesEntity> = arrayListOf()
-
-        fun setData(list: ArrayList<FavoritesEntity>) {
-            mData.clear()
-            mData.addAll(list)
-            mAdapter.notifyDataSetChanged()
-        }
-
-        override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-            Collections.swap(mData, fromPosition, toPosition)
-            notifyItemMoved(fromPosition, toPosition)
-            return true
-        }
-
-        override fun onItemDismiss(position: Int) {
-            favoritePresenter.removeFavoriteItem(mData[position].id)
-            mData.removeAt(position)
-            favoritePresenter.getFavoritesList(context)
-            notifyItemRemoved(position)
-            showToast(RemoveFavorite)
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {
-            return CustomHolder(
-                LayoutInflater.from(parent.context).inflate(
-                    R.layout.favorite_list,
-                    parent,
-                    false
-                )
-            )
-        }
-
-        override fun getItemCount(): Int {
-            return mData.count()
-        }
-
-        @SuppressLint("SetTextI18n")
-        override fun onBindViewHolder(holder: CustomHolder, position: Int) {
-            val item = mData[position]
-            holder.phoneName.text = item.name
-            holder.phonePrice.text = item.price.toString()
-            holder.phoneRating.text = "Rating : " + item.rating
-
-            Glide.with(context).load(item.thumbImageURL).into(holder.phoneImage)
-
-            holder.cardView.setOnClickListener {
-                val intent = Intent(activity, DetailActivity::class.java)
-                favoritePresenter.openDetailPage(
-                    intent,
-                    item.thumbImageURL,
-                    item.name,
-                    item.brand,
-                    item.description,
-                    item.id,
-                    item.rating,
-                    item.price
-                )
-                startActivity(intent)
-            }
-        }
-
-        inner class CustomHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val cardView: CardView = view.cardViewFav
-            val phoneImage: ImageView = view.phoneImageFav
-            val phoneName: TextView = view.phoneNameFav
-            val phonePrice: TextView = view.phonePriceFav
-            val phoneRating: TextView = view.phoneRatingFav
-        }
-    }
-
-    inner class CustomItemTouchHelperCallback(private var listener: CustomItemTouchHelperListener) :
-        ItemTouchHelper.Callback() {
-        override fun getMovementFlags(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder
-        ): Int {
-
-            val dragFlags = 0
-            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-            return makeMovementFlags(dragFlags, swipeFlags)
-        }
-
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ): Boolean {
-            return true
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewHolder.let {
-                listener.onItemDismiss(viewHolder.adapterPosition)
-            }
-        }
-    }
-
-    interface CustomItemTouchHelperListener {
-        fun onItemMove(fromPosition: Int, toPosition: Int): Boolean
-
-        fun onItemDismiss(position: Int)
     }
 }
