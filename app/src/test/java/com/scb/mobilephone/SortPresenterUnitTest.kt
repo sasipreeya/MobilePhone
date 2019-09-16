@@ -7,10 +7,8 @@ import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.presenters.SortInterface
 import com.scb.mobilephone.presenters.SortList
-import org.junit.Test
-
-import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations

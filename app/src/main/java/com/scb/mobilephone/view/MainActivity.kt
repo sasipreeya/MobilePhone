@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                         // sectionsPagerAdapter.updateListFragment()
                     }
                     1 -> {
-                        // sectionsPagerAdapter.updateFavoriteFragment()
+                        sectionsPagerAdapter.updateFavoriteFragment()
                     }
                 }
             }
