@@ -1,20 +1,12 @@
 package com.scb.mobilephone.view
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import android.widget.ToggleButton
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.scb.mobilephone.R
 import com.scb.mobilephone.extensions.AddFavorite
 import com.scb.mobilephone.extensions.RemoveFavorite
@@ -24,9 +16,9 @@ import com.scb.mobilephone.presenters.ListPresenter
 import com.scb.mobilephone.presenters.SortInterface
 import com.scb.mobilephone.presenters.SortList
 import com.scb.mobilephone.presenters.interfaces.ListInterface
+import com.scb.mobilephone.view.adapters.ListAdapter
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
-import kotlinx.android.synthetic.main.phone_list.view.*
 
 
 class ListFragment : BaseSortFragment(), ListInterface.ListView, SortInterface.SortToView {
@@ -35,7 +27,7 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView, SortInterface.S
     private lateinit var phonesList: List<PhonesListEntity>
 
     lateinit var listPresenter: ListInterface.ListPresenter
-    lateinit var mAdapter: CustomAdapter
+    lateinit var mAdapter: ListAdapter
     lateinit var favoritesList: List<FavoritesEntity>
 
     override fun onCreateView(
@@ -54,7 +46,31 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView, SortInterface.S
         listPresenter.setupTreadManager()
         listPresenter.setupDatabase(context!!)
 
-        mAdapter = CustomAdapter(context!!)
+        mAdapter = ListAdapter(context!!, object : ListAdapter.ListListener {
+            override fun checkedHeart(item: FavoritesEntity): Boolean {
+                return favoritesList.contains(item)
+            }
+
+            override fun addToFavorites(item: PhonesListEntity) {
+                listPresenter.addFavoriteItem(item)
+                showToast(AddFavorite)
+            }
+
+            override fun removeFromFavorites(item: PhonesListEntity) {
+                listPresenter.removeFavoriteItem(item.id)
+                showToast(RemoveFavorite)
+            }
+
+            override fun gotoDetailPage(item: PhonesListEntity) {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("name", item.name)
+                intent.putExtra("brand", item.brand)
+                intent.putExtra("detail", item.description)
+                intent.putExtra("price", item.price)
+                intent.putExtra("rating", item.rating)
+            }
+        })
+
         view.listRecyclerView.let {
             it.adapter = mAdapter
             it.layoutManager = LinearLayoutManager(activity)
@@ -122,90 +138,5 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView, SortInterface.S
 
     fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
-    inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomHolder>() {
-
-        private var mData: List<PhonesListEntity> = arrayListOf()
-
-        fun setData(list: List<PhonesListEntity>) {
-            mData = list
-            mAdapter.notifyDataSetChanged()
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {
-            return CustomHolder(
-                LayoutInflater.from(parent.context).inflate(
-                    R.layout.phone_list,
-                    parent,
-                    false
-                )
-            )
-        }
-
-        override fun getItemCount(): Int {
-            return mData.count()
-        }
-
-        @SuppressLint("SetTextI18n")
-        override fun onBindViewHolder(holder: CustomHolder, position: Int) {
-            val item = mData[position]
-            val favoriteItem = FavoritesEntity(
-                item.id,
-                item.description,
-                item.brand,
-                item.name,
-                item.price,
-                item.rating,
-                item.thumbImageURL
-            )
-            holder.phoneName.text = item.name
-            holder.phoneDetail.text = item.description
-            holder.phonePrice.text = "Price : $" + item.price
-            holder.phoneRating.text = "Rating : " + item.rating
-
-            Glide.with(context).load(item.thumbImageURL).into(holder.phoneImage)
-
-            holder.cardView.setOnClickListener {
-                val intent = Intent(activity, DetailActivity::class.java)
-                listPresenter.openDetailPage(
-                    intent,
-                    item.thumbImageURL,
-                    item.name,
-                    item.brand,
-                    item.description,
-                    item.id,
-                    item.rating,
-                    item.price
-                )
-                startActivity(intent)
-            }
-
-            holder.favBtn.text = null
-            holder.favBtn.textOn = null
-            holder.favBtn.textOff = null
-
-            holder.favBtn.isChecked = favoritesList.contains(favoriteItem)
-
-            holder.favBtn.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    listPresenter.addFavoriteItem(item)
-                    showToast(AddFavorite)
-                } else {
-                    listPresenter.removeFavoriteItem(item.id)
-                    showToast(RemoveFavorite)
-                }
-            }
-        }
-    }
-
-    inner class CustomHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val cardView: CardView = view.cardView
-        val phoneImage: ImageView = view.phoneImage
-        val phoneName: TextView = view.phoneName
-        val phoneDetail: TextView = view.phoneDetail
-        val phonePrice: TextView = view.phonePrice
-        val phoneRating: TextView = view.phoneRating
-        val favBtn: ToggleButton = view.favoriteBtn
     }
 }
