@@ -9,12 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.scb.mobilephone.R
+import com.scb.mobilephone.extensions.AddFavorite
+import com.scb.mobilephone.extensions.RemoveFavorite
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.presenters.ListPresenter
@@ -117,6 +120,10 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView, SortInterface.S
         mAdapter.notifyDataSetChanged()
     }
 
+    fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
     inner class CustomAdapter(val context: Context) : RecyclerView.Adapter<CustomHolder>() {
 
         private var mData: List<PhonesListEntity> = arrayListOf()
@@ -183,8 +190,10 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView, SortInterface.S
             holder.favBtn.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     listPresenter.addFavoriteItem(item)
+                    showToast(AddFavorite)
                 } else {
                     listPresenter.removeFavoriteItem(item.id)
+                    showToast(RemoveFavorite)
                 }
             }
         }

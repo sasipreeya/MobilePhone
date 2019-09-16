@@ -10,12 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.scb.mobilephone.R
+import com.scb.mobilephone.extensions.RemoveFavorite
 import com.scb.mobilephone.models.database.entities.FavoritesEntity
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
 import com.scb.mobilephone.presenters.FavoritePresenter
@@ -101,6 +103,10 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView, Sor
         mAdapter.notifyDataSetChanged()
     }
 
+    fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
     inner class CustomAdapter(val context: Context) :
         RecyclerView.Adapter<CustomAdapter.CustomHolder>(),
         CustomItemTouchHelperListener {
@@ -124,6 +130,7 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView, Sor
             mData.removeAt(position)
             favoritePresenter.getFavoritesList(context)
             notifyItemRemoved(position)
+            showToast(RemoveFavorite)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomHolder {
