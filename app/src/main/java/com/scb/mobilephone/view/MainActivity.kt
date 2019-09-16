@@ -23,8 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainPresenter: MainInterface.MainPresenter
     private lateinit var phonesList: List<PhonesListEntity>
     private lateinit var favoritesList: List<FavoritesEntity>
-
-    lateinit var sectionsPagerAdapter: SectionsPagerAdapter
+    private lateinit var sectionsPagerAdapter: SectionsPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 when (position) {
                     0 -> {
-                        // sectionsPagerAdapter.updateListFragment()
+                        sectionsPagerAdapter.updateListFragment()
                     }
                     1 -> {
                         sectionsPagerAdapter.updateFavoriteFragment()

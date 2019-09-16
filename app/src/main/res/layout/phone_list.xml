@@ -61,6 +61,7 @@
                     android:id="@+id/phoneRating"
                     android:layout_margin="8dp"
                     android:paddingStart="80dp"
+                    android:paddingEnd="8dp"
                     android:layout_below="@id/phoneDetail"
                     android:layout_alignParentEnd="true"
                     android:layout_width="wrap_content"

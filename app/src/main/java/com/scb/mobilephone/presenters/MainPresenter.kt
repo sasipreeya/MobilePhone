@@ -18,21 +18,21 @@ class MainPresenter : MainInterface.MainPresenter {
     private lateinit var sortedPhonesList: List<PhonesListEntity>
     private lateinit var sortedFavoritesList: List<FavoritesEntity>
 
-    override fun sortList(phonesList: List<PhonesListEntity>, favoriteslist: List<FavoritesEntity>, sort: String) {
+    override fun sortList(phonesList: List<PhonesListEntity>, favoritesList: List<FavoritesEntity>, sort: String) {
         when (sort) {
             PriceLH -> {
                 sortedPhonesList = phonesList.sortedBy { it.price }
-                sortedFavoritesList = favoriteslist.sortedBy { it.price }
+                sortedFavoritesList = favoritesList.sortedBy { it.price }
                 Log.d("sorted", sortedPhonesList.toString())
             }
             PriceHL -> {
                 sortedPhonesList = phonesList.sortedByDescending { it.price }
-                sortedFavoritesList = favoriteslist.sortedByDescending { it.price }
+                sortedFavoritesList = favoritesList.sortedByDescending { it.price }
                 Log.d("sorted", sortedPhonesList.toString())
             }
             RatingHL -> {
                 sortedPhonesList = phonesList.sortedByDescending { it.rating }
-                sortedFavoritesList = favoriteslist.sortedByDescending { it.rating }
+                sortedFavoritesList = favoritesList.sortedByDescending { it.rating }
                 Log.d("sorted", sortedPhonesList.toString())
             }
         }

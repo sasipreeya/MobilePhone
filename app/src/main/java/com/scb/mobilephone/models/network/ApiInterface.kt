@@ -1,4 +1,4 @@
-package com.scb.mobilephone.models.network;
+package com.scb.mobilephone.models.network
 
 import com.scb.mobilephone.models.PhotoBean
 import com.scb.mobilephone.models.database.entities.PhonesListEntity
@@ -14,7 +14,7 @@ interface ApiInterface {
     @GET("api/mobiles/")
     fun getPhones(): Call<List<PhonesListEntity>>
 
-    @GET()
+    @GET
     fun getPhotos(@Url url: String): Call<List<PhotoBean>>
 
     companion object Factory {
