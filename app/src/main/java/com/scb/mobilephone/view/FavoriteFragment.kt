@@ -60,6 +60,7 @@ class FavoriteFragment : BaseSortFragment(), FavoriteInterface.FavoriteView,
                 intent.putExtra("detail", item.description)
                 intent.putExtra("price", item.price)
                 intent.putExtra("rating", item.rating)
+                startActivity(intent)
             }
         })
 

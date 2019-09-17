@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.scb.mobilephone.R
 import com.scb.mobilephone.extensions.AddFavorite
 import com.scb.mobilephone.extensions.RemoveFavorite
@@ -68,12 +69,13 @@ class ListFragment : BaseSortFragment(), ListInterface.ListView, SortInterface.S
                 intent.putExtra("detail", item.description)
                 intent.putExtra("price", item.price)
                 intent.putExtra("rating", item.rating)
+                startActivity(intent)
             }
         })
 
         view.listRecyclerView.let {
             it.adapter = mAdapter
-            it.layoutManager = LinearLayoutManager(activity)
+            it.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
         }
 
         progressBar.visibility = View.VISIBLE
